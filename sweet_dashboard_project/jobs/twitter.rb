@@ -11,11 +11,11 @@ twitter = Twitter::REST::Client.new do |config|
   config.access_token_secret = 'r9w7P4Ht0NQcHHL6Ni3PJv3EpOi2VbAsQcaDeVuagR0td'
 end
 
-search_term = URI::encode('#SoniaNautankiMarch')
+screen_name = URI::encode('@chetan_bhagat')
 
-SCHEDULER.every '10m', :first_in => 0 do |job|
+SCHEDULER.every '1m', :first_in => 0 do |job|
   ##begin
-    tweets = twitter.search("#SoniaNautankiMarch")
+    tweets = twitter.user_timeline('@chetan_bhagat')
 
     if tweets
       tweets = tweets.map do |tweet|

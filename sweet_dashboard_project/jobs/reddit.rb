@@ -5,10 +5,8 @@ class Reddit
   def initialize()
     # add your desired subreddits here
     @subreddits = {
-      '/r/programming' => 'http://www.reddit.com/r/programming.json',
-      '/r/webdev' => 'http://www.reddit.com/r/webdev.json',
-      '/r/drupal' => 'http://www.reddit.com/r/drupal.json',
-      '/r/ruby' => 'http://www.reddit.com/r/ruby.json'
+	  '/r/movies' => 'http://www.reddit.com/r/movies.json'
+    
     }
 
     # the limit per subreddit to grab
