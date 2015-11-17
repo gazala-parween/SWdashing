@@ -1,6 +1,7 @@
 import pprint
 import csv
 import json
+import datetime
 
 from NewsWhipAPILib.Controllers.NewsController import *
 
@@ -28,12 +29,11 @@ with open('news2.csv', 'w') as csvfile:
     #data = csv.writer(csvfile, delimiter=' ',quotechar='|', quoting=csv.QUOTE_MINIMAL)
    
     #data.writerow(['headline', 'comment_count', 'share_count', 'tw_count'])
+	writer.writerow([datetime.datetime.now()])
 	for article in artriclesArr:
 		headlineStr = article["headline"]
 		headlineStr.encode("utf-8")
 		#headline = unicode(headlineStr, "utf-8")
-		writer.writerow([headlineStr, article["fb_data"]["comment_count"], article["fb_data"]["like_count"] ])
-
-f.close()
+		writer.writerow([  article["headline"].encode("utf-8"), article["fb_data"]["comment_count"], article["fb_data"]["like_count"] ])
 
 
