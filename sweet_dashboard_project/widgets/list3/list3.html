@@ -1,20 +1,44 @@
 <h1 class="title" data-bind="title"></h1>
-
-<ol>
-  <li data-foreach-item="items">
-    <span class="label" data-bind="item.label"></span>
-    <span class="value" data-bind="item.value"></span>
-	<span class="value" data-bind="item.value2"></span>
+<table width="100%" style="margin-left:20px;margin-top:60px;margin-bottom:10px;">
+		<tr> 
+			<td width="50%" valign="top" align="left">
+				<h3 class="value" style="float:none;" >Title</h3>
+			</td>
+			<td width="30%" valign="top" align="left" >
+				<h3 class="value" style="float:none;">Publisher</h3>
+				
+			</td>
+			<td width="20%" valign="top" align="left">
+				<h3 class="value" style="float:none;" >Count</h3>
+			</td>
+		</tr>
+	</table>
+<ol style="list-style:none">
+  <li data-foreach-item="items" style="vertical-align:top;">
+	<table width="100%">
+		<tr> 
+			<td width="50%" valign="top">
+				<span class="label" data-bind="item.label"></span>
+			</td>
+			<td width="30%" valign="top" >
+				<span class="value" data-bind="item.value" style="float:none;"></span>
+				
+			</td>
+			<td width="20%" valign="top">
+				<span class="value" data-bind="item.value2" style="float:none;" ></span>
+			</td>
+		</tr>
+	</table>
+		
+		
+		
+		
+		<div  style="clear:both!important;height: 10px;"></div>
+	
   </li>
 </ol>
 
-<ul>
-  <li data-foreach-item="items">
-    <span class="label" data-bind="item.label"></span>
-    <span class="value" data-bind="item.value"></span>
-	<span class="value" data-bind="item.value2"></span>
-  </li>
-</ul>
+
 
 <p class="more-info" data-bind="moreinfo"></p>
 <p class="updated-at" data-bind="updatedAtMessage"></p>
