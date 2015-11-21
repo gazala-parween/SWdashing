@@ -14,8 +14,8 @@ max_results = 50
 ordered = true
 max_length = 8
 
-SCHEDULER.every '15s', :first_in => 0 do |job|
-  puts "inside youtube scheduler"
+SCHEDULER.every '3m', :first_in => 0 do |job|
+  # puts "inside youtube scheduler"
   http = Net::HTTP.new("www.googleapis.com", Net::HTTP.https_default_port())
   http.use_ssl = true
   http.verify_mode = OpenSSL::SSL::VERIFY_NONE # disable ssl certificate check
@@ -38,13 +38,19 @@ SCHEDULER.every '15s', :first_in => 0 do |job|
     end
    end
  
-	
+	 url_array = Array.new
+   
    for each in youtube_videos do
-	
-	 url = "https://www.youtube.com/watch?v=#{each[:value]}"
-	 puts url	
-	 #url_array.push(url)
+	   # url = "https://www.youtube.com/watch?v=#{each[:value]}"
+     url = "http://www.youtube.com/embed/#{each[:value]}?autoplay=1"
+	   #puts url	
+	   url_array.push({
+          yurl: url
+        })
    end
-	#puts url_array
-	send_event('youtube_player', { items: url})
+	
+  #puts url_array
+	
+  send_event('youtube_player', { :items => url_array.slice(0, 2) })
+  # send_event('youtube_player2', { text: "imran"})
 end
