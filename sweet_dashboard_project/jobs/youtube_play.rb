@@ -14,17 +14,20 @@ max_results = 50
 ordered = true
 max_length = 8
 
-SCHEDULER.every '1m', :first_in => 0 do |job|
+SCHEDULER.every '15s', :first_in => 0 do |job|
+  puts "inside youtube scheduler"
   http = Net::HTTP.new("www.googleapis.com", Net::HTTP.https_default_port())
   http.use_ssl = true
   http.verify_mode = OpenSSL::SSL::VERIFY_NONE # disable ssl certificate check
   response = http.request(Net::HTTP::Get.new("/youtube/v3/search?part=snippet&channelId=#{youtube_channel_id}&maxResults=#{max_results}&key=#{youtube_api_key}"))
-
+  #puts response.code
+  
   if response.code != "200"
     puts "youtube api error (status-code: #{response.code})\n#{response.body}"
   else
     data = JSON.parse(response.body, :symbolize_names => true)
-
+	#puts data
+	
     youtube_videos = Array.new
 
     data[:items].each do |video|
@@ -34,13 +37,14 @@ SCHEDULER.every '1m', :first_in => 0 do |job|
       })
     end
    end
+ 
 	
    for each in youtube_videos do
 	
-	 it = "https://www.youtube.com/watch?v=#{each[:value]}"
-	 it[.each do |v|
-		url.push()
+	 url = "https://www.youtube.com/watch?v=#{each[:value]}"
+	 puts url	
+	 #url_array.push(url)
    end
-	
+	#puts url_array
 	send_event('youtube_player', { items: url})
 end
