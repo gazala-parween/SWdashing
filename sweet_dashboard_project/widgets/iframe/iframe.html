@@ -1,1 +1,6 @@
-<iframe data-bind-src="url" frameborder=0></iframe>
+<h1 class="title" data-bind="title"></h1>
+<ol>
+  <li data-foreach-item="items">
+    <iframe data-bind="item.url" frameborder=0></iframe>
+  </li>
+</ol>
