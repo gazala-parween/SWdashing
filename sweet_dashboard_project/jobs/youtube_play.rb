@@ -1,3 +1,5 @@
+#url = www.googleapis.com/youtube/v3/search?part=snippet&channelId=UCx2HcmpB-UZGkMXOCJ4QIVA&maxResults=5&key=AIzaSyBlRhNVLNqIO9UBBfw8HtV2MZkMeS0Y_q0
+
 require 'net/http'
 require 'openssl'
 require 'json'
@@ -8,49 +10,90 @@ require 'json'
 # Config
 # ------
 youtube_api_key =  ENV['YOUTUBE_API_KEY'] || 'AIzaSyBlRhNVLNqIO9UBBfw8HtV2MZkMeS0Y_q0'
-youtube_channel_id = ENV['YOUTUBE_CHANNEL_ID'] || 'UCx2HcmpB-UZGkMXOCJ4QIVA'
+youtube_channel_id = ENV['YOUTUBE_CHANNEL_ID'] || 'UCx2HcmpB-UZGkMXOCJ4QIVA' #'UCNJcSUSzUeFm8W9P7UUlSeQ'
 max_results = 50
-# order the list by the numbers
-ordered = true
 max_length = 8
 
-SCHEDULER.every '3m', :first_in => 0 do |job|
-  # puts "inside youtube scheduler"
+#for each in youtube_channel_id do
+
+SCHEDULER.every '20s', :first_in => 0 do |job|
+  
   http = Net::HTTP.new("www.googleapis.com", Net::HTTP.https_default_port())
   http.use_ssl = true
   http.verify_mode = OpenSSL::SSL::VERIFY_NONE # disable ssl certificate check
-  response = http.request(Net::HTTP::Get.new("/youtube/v3/search?part=snippet&channelId=#{youtube_channel_id}&maxResults=#{max_results}&key=#{youtube_api_key}"))
-  #puts response.code
+  response = http.request(Net::HTTP::Get.new("/youtube/v3/search?part=snippet&channelId=#{youtube_channel_id}&maxResults=#{max_results}&order=date&key=#{youtube_api_key}"))
+  
   
   if response.code != "200"
     puts "youtube api error (status-code: #{response.code})\n#{response.body}"
   else
     data = JSON.parse(response.body, :symbolize_names => true)
-	#puts data
 	
-    youtube_videos = Array.new
-
+	youtube_videos = Array.new
+	
     data[:items].each do |video|
       youtube_videos.push({
-    
-        :value => video[:id][:videoId]
+        label: video[:snippet][:title],
+        value: video[:id][:videoId]
       })
     end
-   end
- 
-	 url_array = Array.new
    
-   for each in youtube_videos do
-	   # url = "https://www.youtube.com/watch?v=#{each[:value]}"
-     url = "http://www.youtube.com/embed/#{each[:value]}?autoplay=1"
-	   #puts url	
-	   url_array.push({
-          yurl: url
+   
+   #video_ar = []
+   # puts data[:items]
+   
+   # for item in data[:items]
+	# puts item,"  " 
+   # end
+   
+   #puts youtube_videos
+   
+    youtube_stats = Array.new
+    for each in youtube_videos do
+      http = Net::HTTP.new("www.googleapis.com", Net::HTTP.https_default_port())
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE # disable ssl certificate check
+      response = http.request(Net::HTTP::Get.new("/youtube/v3/videos?part=statistics&id=#{each[:value]}&key=#{youtube_api_key}"))
+      data = JSON.parse(response.body, :symbolize_names => true)
+
+      data[:items].each do |video|
+        youtube_stats.push({
+          label: each[:label],
+		  value: each[:value],
+          value1: video[:statistics][:viewCount].to_i
         })
-   end
+      end
+    end
+	#def video_detil
 	
-  #puts url_array
+   
+ 
+ 
+   url_array = Array.new
+   
+   for each in youtube_stats do
+	   
+     url = "http://www.youtube.com/embed/#{each[:value]}?autoplay=1"
+	  	
+	   url_array.push({
+          :yurl => url,
+		  :title => each[:label],
+		  :count => each[:value1]
+        })
+       end
+     puts url_array
+     
+	 min=0
+     len=1
+ 
+     for each in url_array
 	
-  send_event('youtube_player', { :items => url_array.slice(0, 2) })
-  # send_event('youtube_player2', { text: "imran"})
+          send_event('youtube_player', { :items => url_array.slice(min, len) })
+  
+          sleep(60)
+          min=min+1
+  
+     end
+
+	end
 end
