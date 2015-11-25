@@ -11,17 +11,17 @@ require 'json'
 # ------
 youtube_api_key =  ENV['YOUTUBE_API_KEY'] || 'AIzaSyBlRhNVLNqIO9UBBfw8HtV2MZkMeS0Y_q0'
 youtube_channel_id = ENV['YOUTUBE_CHANNEL_ID'] || 'UCx2HcmpB-UZGkMXOCJ4QIVA' #'UCNJcSUSzUeFm8W9P7UUlSeQ'
-max_results = 50
-max_length = 8
+max_results = 5
+
 
 #for each in youtube_channel_id do
 
-SCHEDULER.every '20s', :first_in => 0 do |job|
+SCHEDULER.every '5m', :first_in => 0 do |job|
   
   http = Net::HTTP.new("www.googleapis.com", Net::HTTP.https_default_port())
   http.use_ssl = true
   http.verify_mode = OpenSSL::SSL::VERIFY_NONE # disable ssl certificate check
-  response = http.request(Net::HTTP::Get.new("/youtube/v3/search?part=snippet&channelId=#{youtube_channel_id}&maxResults=#{max_results}&order=date&key=#{youtube_api_key}"))
+  response = http.request(Net::HTTP::Get.new("/youtube/v3/search?part=snippet&channelId=#{youtube_channel_id}&order=date&maxResults=#{max_results}&key=#{youtube_api_key}"))
   
   
   if response.code != "200"
@@ -47,6 +47,8 @@ SCHEDULER.every '20s', :first_in => 0 do |job|
    # end
    
    #puts youtube_videos
+   
+   
    
     youtube_stats = Array.new
     for each in youtube_videos do
