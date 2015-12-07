@@ -13,3 +13,4 @@ SCHEDULER.every '2s' do
   send_event('synergy',   { value: rand(100) })
  
 end
+

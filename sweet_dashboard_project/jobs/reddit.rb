@@ -5,8 +5,10 @@ class Reddit
   def initialize()
     # add your desired subreddits here
     @subreddits = {
-	  '/r/movies' => 'http://www.reddit.com/r/movies.json'
-    
+	  '/r/movies' => 'http://www.reddit.com/r/movies.json',
+      '/r/Fitness/' => 'http://www.reddit.com/r/Fitness.json',
+	  '/r/news/'  => 'http://www.reddit.com/r/news.json',
+	  'r/gadgets/'  => 'http://www.reddit.com/r/gadgets.json'
     }
 
     # the limit per subreddit to grab
@@ -48,4 +50,4 @@ end
 SCHEDULER.every '2m', :first_in => 0 do |job|
   posts = @Reddit.getTopPostsPerSubreddit
   send_event('reddit', { :posts => posts })
-end
+end						
