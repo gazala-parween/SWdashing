@@ -11,19 +11,28 @@ twitter = Twitter::REST::Client.new do |config|
   config.access_token_secret = 'r9w7P4Ht0NQcHHL6Ni3PJv3EpOi2VbAsQcaDeVuagR0td'
 end
 
-screen_name = URI::encode('@chetan_bhagat')
+
 
 SCHEDULER.every '1m', :first_in => 0 do |job|
-  ##begin
-    tweets = twitter.user_timeline('@chetan_bhagat')
-
+  
+    twee_arr =Array.new
+    screen_name = ["@iamsrk","@chetan_bhagat","@narendramodi","@RashtrapatiBhvn"]
+   for scr_ in screen_name
+     tweets = twitter.user_timeline(scr_)
+	
     if tweets
       tweets = tweets.map do |tweet|
-        { name: tweet.user.name, body: tweet.text, avatar: tweet.user.profile_image_url_https }
+        { name: tweet.user.name, count: tweet.retweet_count, body: tweet.text, avatar: tweet.user.profile_image_url_https }
       end
-      send_event('twitter_mentions', comments: tweets)
-    end
-  ##rescue Twitter::Error
-  ##  puts "\e[33mFor the twitter widget to work, you need to put in your twitter API keys in the jobs/twitter.rb file.\e[0m"
-  ##end
+	end 
+	
+	twee_arr.push(tweets)
+	#puts twee_arr
+   end
+   
+      send_event('twitter_mentions1', comments: twee_arr[0])
+      send_event('twitter_mentions2', comments: twee_arr[1])
+	  send_event('twitter_mentions3', comments: twee_arr[2])
+      send_event('twitter_mentions4', comments: twee_arr[3])
+    
 end
