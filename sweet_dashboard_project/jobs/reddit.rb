@@ -4,13 +4,15 @@ require 'json'
 class Reddit
   def initialize()
     # add your desired subreddits here
-    @subreddits = {
+      @subreddits = ['http://www.reddit.com/r/history.json']
+         
+    """@subreddits = {
 	  '/r/movies' => 'http://www.reddit.com/r/movies.json',
       '/r/Fitness/' => 'http://www.reddit.com/r/Fitness.json',
 	  '/r/news/'  => 'http://www.reddit.com/r/news.json',
 	  'r/gadgets/'  => 'http://www.reddit.com/r/gadgets.json'
     }
-
+"""
     # the limit per subreddit to grab
     @maxcount = 5
   end
@@ -18,12 +20,13 @@ class Reddit
   def getTopPostsPerSubreddit()
     posts = [];
 
-    @subreddits.each do |subreddit, url|
+    #@subreddits.each do |subreddit, url|
+      @subreddits.each do |url|
       response = JSON.parse(Net::HTTP.get(URI(url)))
 
-      if !response
-        puts "reddit communication error for #{@subreddit} (shrug)"
-      else
+      #if !response
+        #puts "reddit communication error for #{@subreddit} (shrug)"
+      #else
         items = []
 
         for i in 0..@maxcount
@@ -36,9 +39,9 @@ class Reddit
             comments: response['data']['children'][i]['data']['num_comments']
           })
         end
-
-        posts.push({ label: 'Current top posts in "' + subreddit + '"', items: items })
-      end
+        posts.push({ label: 'Current top posts in', items: items })
+        #posts.push({ label: 'Current top posts in "' + subreddit + '"', items: items })
+      #end
     end
 
     posts

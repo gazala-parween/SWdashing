@@ -3,12 +3,13 @@
 require 'net/http'
 require 'json'
 
-min = 0
-page_size= 5
+
 
 # :first_in sets how long it takes before the job is first run. In this case, it is run immediately
 
-SCHEDULER.every '20s', :first_in => 0 do |job|
+SCHEDULER.every '4m', :first_in => 0 do |job|
+  min = 0
+  page_size= 5
   uri = URI('http://www.newswhip.com/api/v1/region/India/all/2?key=AHwaqz7hApx9D')
   response = Net::HTTP.get(uri) # => String
 
