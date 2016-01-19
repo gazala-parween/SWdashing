@@ -1,0 +1,30 @@
+$def with (usr)
+
+<html>
+    <head>
+        <title>ScoopWhoop</title>
+        <script>
+            function goToURL() { 
+                location.href = '/edit';
+            }
+        </script>
+    </head>
+    
+    <body style="background-color: lightblue">
+        <form action="/logout/" style="display: inline-block; float: right; margin: 30px;">
+            <input type="submit" value="Logout" class="btn btn-info">
+        </form>
+
+        <div class="post" style="display: none;"></div>
+        <h1 style="color:blue;">Welcome $usr!!</h1> 
+        <a href="javascript:void(0)" onclick="goToURL(); return false;" >SET PREFRENCES</a>
+<!--
+        <a href="/edit" 
+oncontextmenu="return false">SET PREFRENCES</a>
+-->
+        <iframe src="http://0.0.0.0:3030/sample" width="1260" height="600">
+        </iframe>
+        <script src="static/js/jquery-1.11.1.min.js"></script>
+        <script src="static/js/edit.js"></script>
+    </body>    
+</html>

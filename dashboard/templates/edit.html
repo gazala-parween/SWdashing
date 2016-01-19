@@ -1,20 +1,145 @@
-<html>
-<body>
+<!doctype html>
+<html lang="en">
+<head>
+    <title>ScoopWhoop</title>
+    <script type="text/javascript">
+        <!-- Hide the script from old browsers
+        function containsblanks(s)
+        {
+          for(var i = 0; i < s.value.length; i++)  
+          { 
+              var c = s.value.charAt(i);
+              if ((c == ' ') || (c == '\n') || (c == '\t'))
+              {
+                  alert('The field must not contain whitespace');
+                  return false;
+              }
+          }
+          return true;
+        } 
+    </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     
-    <form method="post">
-    <table>
+</head>
     
-        <tr><th><label for="subreddit">Reddit</label></th><td><input  type="text" id="subreddit" name="subreddit"/><div class="post" style="display: none;"></div></td><th><label for="add"></label></th><td><button id="add" name="add">Add</button><div class="post" style="display: none;"></div></td></tr>
-        
-        <tr><th><label for="subreddit">Twitter</label></th><td><input  type="text" id="subreddit" name="subreddit"/><div class="post" style="display: none;"></div></td><th><label for="add"></label></th><td><button id="add" name="add">Add</button><div class="post" style="display: none;"></div></td></tr>
-        
-        <tr><th><label for="subreddit">Youtube</label></th><td><input  type="text" id="subreddit" name="subreddit"/><div class="post" style="display: none;"></div></td><th><label for="add"></label></th><td><button id="add" name="add">Add</button><div class="post" style="display: none;"></div></td></tr>
-        
-        <tr><th><label for="subreddit">Newswhip</label></th><td><input  type="text" id="subreddit" name="subreddit"/><div class="post" style="display: none;"></div></td><th><label for="add"></label></th><td><button id="add" name="add">Add</button><div class="post" style="display: none;"></div></td></tr>
+<body style="background-color: lightblue">
     
+<a href="/" >HOME</a>   
+   <div class="container">
+    
+    <form method="post" class="form-inline" role="form"onSubmit="return(containsblanks(this.userName)">
         
-    </table>
-    </form>
-      
-</body>
+        <table style="width:100%; color:#337ab7" >
+            <tr>
+                <th>
+                    <label for="set"></label>
+                </th>
+                
+                <td>
+                    <button id="updateBtn" name="update" class="btn btn-warning btn-lg">UPDATE</button>
+                    <div class="post" style="display: none;"></div>
+                </td>
+                
+                <td style="height:100px"></td>
+            
+            </tr>
+            <tr>
+                <td style="height:40px"></td>
+            </tr>
+
+            <tr>
+                <th>
+                    <label>Reddit:</label>
+                </th>
+        
+                <td>
+                    <input type="text" id="redditText" placeholder="Enter Subreddit"/> 
+                    <div class="post" style="display: none;"></div>
+                </td>
+                <th>
+                    <label for="add"></label>
+                </th>
+                <td>
+                    <button id="redditBtn" name="add" class="btn btn-primary">Add</button>
+                    <div class="post" style="display: none;"></div>
+                </td>
+            
+                <th>
+                    <label>Twitter:</label>
+                </th>
+                <td>
+                    <input type="text" id="twitterText" placeholder="Enter Twitter Handles"/>
+                    <div class="post" style="display: none;"></div>
+                </td>
+                <th>
+                    <label for="add"></label>
+                </th>
+                <td>
+                    <button id="twitterBtn" name="add" class="btn btn-primary">Add</button>
+                    <div class="post" style="display: none;"></div>
+                </td>
+            
+                <th>
+                    <label>Youtube:</label>
+                </th>
+                <td>
+                    <input type="text" id="youtubeText" placeholder="Enter ChannelId"/>
+                    <div class="post" style="display: none;"></div>
+                </td>
+                <th>
+                    <label for="add"></label>
+                </th>
+                <td>
+                    <button id="youtubeBtn" name="youtubeBtn" class="btn btn-primary">Add</button>
+                    <div class="post" style="display: none;"></div>
+                </td>
+            
+                <th>
+                    <label>Newswhip:</label>
+                </th>
+                <td>
+                    <input type="text" id="newsText" placeholder="Enter tags"/>
+                    <div class="post" style="display: none;"></div>
+                </td>
+                <th>
+                    <label for="add"></label>
+                </th>
+                <td>
+                    <button id="newsBtn" name="newsBtn" class="btn btn-primary">Add</button>
+                    <div class="post" style="display: none;"></div>
+                </td>
+            </tr>
+            <tr>
+                <td style="height:100px"></td>
+            </tr>
+        </table>
+       </form>
+
+<table style="width:100%;color:#337ab7" class="table" >
+    <tr>
+        <thead>
+            <th>Your subreddits:</th>
+            <th>Your twitter handles:</th>
+            <th>Your youtube channels:</th>
+            <th>Your newswhip tags:</th>
+        </thead>
+    </tr>
+    <tbody>
+        <tr class="active">
+            <td id="reddit_container"></td>
+            <td id="twitter_container"></td>
+            <td id="youtube_container"></td>
+            <td id="news_container"></td>
+        </tr>
+    </tbody>
+</table>
+
+<script src="static/js/jquery-1.11.1.min.js"></script>
+<script src="static/js/edit.js"></script>
+    </div>
+    </body>
 </html>

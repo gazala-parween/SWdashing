@@ -1,13 +1,50 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>ScoopWhoop</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="static/js/jquery-1.11.1.min.js"></script>
+  <script src="static/js/edit.js"></script>
+</head>
     <body>
-    <form method="post">
-    <table>
-    <tr><th><label for="username">username</label></th><td><input  type="text" id="username" name="username"/><div class="post" style="display: none;"></div></td></tr>
-    
-    <tr><th><label for="password">password</label></th><td><input type="password" id="password" name="password"/><div class="post" style="display: none;"></div></td></tr>
-        
-    <tr><th><label for="Login"></label></th><td><button id="Login" name="Login">Login</button><div class="post" style="display: none;"></div></td></tr>
-    </table>
-    </form>
+        <div class="container">
+        <form method="post" class="form-horizontal" role="form">
+            <table>
+                <tr>
+                    <th>
+                        <label for="username" class="control-label col-sm-2">Username:</label>
+                    </th>
+                    <td>
+                        <input  type="text" id="username" name="username" class="form-control" 
+                               placeholder="Enter email"/>
+                        <div class="post" style="display: none;"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="password" class="control-label col-sm-2">Password:</label>
+                    </th>
+                    <td>
+                        <input type="password" id="password" name="password" class="form-control" 
+                               placeholder="Enter Password"/>
+                        <div class="post" style="display: none;"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="Login"></label>
+                    </th>
+                    <td>
+                        <button id="Login" name="Login" class="btn btn-info">Login</button>
+                        <div class="post" style="display: none;"></div>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        </div>
     </body>
 </html>

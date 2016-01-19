@@ -1,56 +1,53 @@
 require 'net/http'
 require 'json'
 
+
 class Reddit
-  def initialize()
-    # add your desired subreddits here
-      @subreddits = ['http://www.reddit.com/r/history.json']
-         
-    """@subreddits = {
-	  '/r/movies' => 'http://www.reddit.com/r/movies.json',
-      '/r/Fitness/' => 'http://www.reddit.com/r/Fitness.json',
-	  '/r/news/'  => 'http://www.reddit.com/r/news.json',
-	  'r/gadgets/'  => 'http://www.reddit.com/r/gadgets.json'
-    }
-"""
-    # the limit per subreddit to grab
-    @maxcount = 5
-  end
-
-  def getTopPostsPerSubreddit()
-    posts = [];
-
-    #@subreddits.each do |subreddit, url|
-      @subreddits.each do |url|
-      response = JSON.parse(Net::HTTP.get(URI(url)))
-
-      #if !response
-        #puts "reddit communication error for #{@subreddit} (shrug)"
-      #else
-        items = []
-
-        for i in 0..@maxcount
-          title = response['data']['children'][i]['data']['title']
-          trimmed_title = title[0..85].gsub(/\s\w+$/, '...')
-
-          items.push({
-            title: trimmed_title,
-            score: response['data']['children'][i]['data']['score'],
-            comments: response['data']['children'][i]['data']['num_comments']
-          })
+   
+    def getTopPostsPerSubreddit()  
+        
+        uri = URI("http://0.0.0.0:8080/api/")
+        response = Net::HTTP.get(uri)
+        #puts response
+        data = JSON.parse(response)
+        subreddit =Array.new
+    
+        for d in data
+            subreddit = d['reddit']
         end
-        posts.push({ label: 'Current top posts in', items: items })
-        #posts.push({ label: 'Current top posts in "' + subreddit + '"', items: items })
-      #end
+        response = []
+        posts = [];
+        #print subreddit
+        for it in subreddit
+            puts it
+            url = URI("https://www.reddit.com"+it+"/.json")
+            data = Net::HTTP.get(url)
+            response = JSON.parse(data)
+            
+            items = []
+            mastr_ar = response['data']['children']
+            
+            for item_ in mastr_ar[0..4]
+                title = item_['data']['title']
+                trimmed_title = title[0..85].gsub(/\s\w+$/, '...')
+                items.push({
+                    title: trimmed_title,
+                    score: item_['data']['score'],
+                    comments: item_['data']['num_comments']
+                })
+            end
+            posts.push({ label: 'Current top posts in "' + it + '"', items: items })
+        end
+     posts
     end
-
-    posts
-  end
 end
 
 @Reddit = Reddit.new();
 
-SCHEDULER.every '2m', :first_in => 0 do |job|
+SCHEDULER.every '20s', :first_in => 0 do |job|
+  
   posts = @Reddit.getTopPostsPerSubreddit
+   
   send_event('reddit', { :posts => posts })
-end						
+end		
+			

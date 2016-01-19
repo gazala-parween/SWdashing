@@ -2,11 +2,11 @@ require 'net/http'
 require 'openssl'
 require 'json'
 
-SCHEDULER.every '5m', :first_in => 0 do |job|
+SCHEDULER.every '20s', :first_in => 0 do |job|
   
   def video_stats(v_id)
 	uri = URI("https://www.googleapis.com/youtube/v3/videos?part=statistics&id=
-	"+v_id+"&key=AIzaSyBlRhNVLNqIO9UBBfw8HtV2MZkMeS0Y_q0")
+	"+v_id.to_s+"&key=AIzaSyBlRhNVLNqIO9UBBfw8HtV2MZkMeS0Y_q0")
     response = Net::HTTP.get(uri) # => String
     data = JSON.parse(response)
 	return data['items'][0]['statistics']['viewCount']
