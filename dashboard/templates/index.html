@@ -1,4 +1,4 @@
-$def with (usr)
+$def with (user)
 
 <html>
     <head>
@@ -16,15 +16,19 @@ $def with (usr)
         </form>
 
         <div class="post" style="display: none;"></div>
-        <h1 style="color:blue;">Welcome $usr!!</h1> 
+        <h1 style="color:blue;">Welcome $user['username_']!!</h1> 
         <a href="javascript:void(0)" onclick="goToURL(); return false;" >SET PREFRENCES</a>
-<!--
-        <a href="/edit" 
-oncontextmenu="return false">SET PREFRENCES</a>
--->
-        <iframe src="http://0.0.0.0:3030/sample" width="1260" height="600">
+        
+        <a href="/createUser/" oncontextmenu="return false">CREATE USER</a>
+        
+        <iframe src="http://0.0.0.0:3030/$user['user_id']" width="1260" height="600">
         </iframe>
+        <script>
+       console.log("$user['user_id']");
+            window.localStorage.setItem("user_id","$user['user_id']");
+        </script>
         <script src="static/js/jquery-1.11.1.min.js"></script>
         <script src="static/js/edit.js"></script>
+        <script></script>
     </body>    
 </html>

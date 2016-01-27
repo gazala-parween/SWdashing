@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>ScoopWhoop</title>
+    </head>
+
+    <body>
+        <div class="container">
+        <form method="post" class="form-horizontal" role="form">
+            <table>
+                <tr>
+                    <th>
+                        <label for="username" class="control-label col-sm-2">Username:</label>
+                    </th>
+                    <td>
+                        <input  type="text" id="username" name="username" class="form-control" 
+                               placeholder="Enter username"/>
+                        <div class="post" style="display: none;"></div>
+                    </td>
+                </tr>
+<!--
+                <tr>
+                    <th>
+                        <label for="email" class="control-label col-sm-2">EmailID:</label>
+                    </th>
+                    <td>
+                        <input  type="text" id="email" name="email" class="form-control" 
+                               placeholder="Enter email"/>
+                        <div class="post" style="display: none;"></div>
+                    </td>
+                </tr>
+-->
+                <tr>
+                    <th>
+                        <label for="password" class="control-label col-sm-2">Password:</label>
+                    </th>
+                    <td>
+                        <input type="password" id="password" name="password" class="form-control" 
+                               placeholder="Enter Password"/>
+                        <div class="post" style="display: none;"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="permission"></label>
+                    </th>
+                    <td>
+                        <input class="radioitem" type="radio" id="r1" name="permission" value="user">User
+                        <input class="radioitem" type="radio"id="r2"  name="permission" value="admin" >Admin<br>
+                        <div class="post" style="display: none;"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="create"></label>
+                    </th>
+                    <td>
+                        <button id="create" name="create" class="btn btn-info">Create</button>
+                        <a href="/" >Cancel</a>   
+                        <div class="post" style="display: none;"></div>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        </div>
+    </body>
+  </html>  

@@ -8,21 +8,14 @@ from vali import *
 
 render = web.template.render('templates/')
 urls = (
-    '/','index','/edit','edit','/reddit/','reddit','/twitter/','twitter','/youtube/','youtube','/news/','news','/api/','api','/redditRemove/','redditRemove','/twitterRemove/','twitterRemove','/youtubeRemove/','youtubeRemove','/newsRemove/','newsRemove','/update/','update','/logout/','logout','/login','login',
+    '/','index','/edit','edit','/reddit/','reddit','/twitter/','twitter','/youtube/','youtube','/news/','news','/api/','api','/redditRemove/','redditRemove','/twitterRemove/','twitterRemove','/youtubeRemove/','youtubeRemove','/newsRemove/','newsRemove','/update/','update','/logout/','logout','/login','login','/createUser/','createUser'
 )
 
 app = web.application(urls, globals())
-userData = {'username_':"",'password_':""}
+userData = {'username_':"",'password_':"",'user_id':""}
 session = web.session.Session(app, web.session.DiskStore('sessions'))
 
-class index:
-    def GET(self):
-        cookieval=web.cookies().get('test')
-        if cookieval:
-            web.setcookie('test',cookieval,3600)
-            return render.index(userData['username_'])
-        else:
-            raise web.seeother('/login')
+
 
 class login:
     def GET(self):
@@ -37,8 +30,10 @@ class login:
             cookiestr= str(userData['username_'])
             cookie=base64.b64encode(cookiestr).decode('ascii')
             web.setcookie('test', cookie, 3600)
-            print "login post"
+            #print "login post"
+            userData['user_id']=Login(userData['username_'])
             raise web.seeother('/')
+            
         else:
             return render.login()
         
@@ -47,6 +42,14 @@ class logout:
         web.setcookie('test', 'cookieunset', -100)
         raise web.seeother('/login')
 
+class index:
+    def GET(self):
+        cookieval=web.cookies().get('test')
+        if cookieval:
+            web.setcookie('test',cookieval,3600)
+            return render.index(userData)
+        else:
+            raise web.seeother('/login')
             
 class edit:
     def GET(self):
@@ -59,6 +62,20 @@ class edit:
     
     def POST(self):
         return render.edit()
+    
+class createUser:
+    def GET(self):
+        return render.createUser()
+    
+    def POST(self):
+        data=web.input()
+        rval=CreateUser(data)
+        o_id=str(rval['_id'])
+        u_name=rval['username']
+        CreateRecord(o_id,u_name)
+        CreateRubyDashboard(o_id)
+        CreateRubyJob(o_id)
+        return render.createUser()
 
 class reddit:
     def POST(self):
@@ -68,7 +85,7 @@ class reddit:
             web.header('Content-Type', 'application/json')
             web.header("Access-Control-Allow-Origin","*")
             data= web.input()
-            usrr= userData['username_']
+            usrr= userData['user_id']
             textr= data['redditText']
             Reddit(usrr,textr)
         
@@ -80,7 +97,7 @@ class twitter:
             web.header('Content-Type', 'application/json')
             web.header("Access-Control-Allow-Origin","*")
             data= web.input()
-            usrt= userData['username_']
+            usrt= userData['user_id']
             textt= data['twitterText']
             Twitter(usrt,textt)
         
@@ -92,7 +109,7 @@ class youtube:
             web.header('Content-Type', 'application/json')
             web.header("Access-Control-Allow-Origin","*")
             data= web.input()
-            usry= userData['username_']
+            usry= userData['user_id']
             texty= data['youtubeText']
             Youtube(usry,texty)
             
@@ -104,7 +121,7 @@ class news:
             web.header('Content-Type', 'application/json')
             web.header("Access-Control-Allow-Origin","*")
             data= web.input()
-            usrn= userData['username_']
+            usrn= userData['user_id']
             textn= data['newsText']
             News(usrn,textn)
         
@@ -113,9 +130,14 @@ class api:
 #        cookieval=web.cookies().get('test')
 #        if cookieval:
 #            web.setcookie('test',cookieval,3600)
-        usra= userData['username_']
-        w_data = web.input()
-        data = Api(usra)
+        usra= userData['user_id']
+        _id = userData['user_id'] 
+#            data = Api(_id)
+
+        i= web.input()
+        print i.user_id
+        data = Api(i.user_id)
+#            data = Api()
         web.header('Content-Type', 'application/json')
         web.header("Access-Control-Allow-Origin","*")
         return json.dumps(data)
@@ -126,7 +148,7 @@ class redditRemove:
         if cookieval:
             web.setcookie('test',cookieval,3600)
             data= web.input()
-            usrrv= userData['username_']
+            usrrv= userData['user_id']
             datar=data['redditRem']
             RedditRemove(usrrv,datar)
             
@@ -136,7 +158,7 @@ class twitterRemove:
         if cookieval:
             web.setcookie('test',cookieval,3600)
             data= web.input()
-            usrtv= userData['username_']
+            usrtv= userData['user_id']
             datat=data['twitterRem']
             TwitterRemove(usrtv,datat)
             
@@ -147,7 +169,7 @@ class youtubeRemove:
         if cookieval:
             web.setcookie('test',cookieval,3600)
             data= web.input()
-            usryv= userData['username_']
+            usryv= userData['user_id']
             datay=data['youtubeRem']
             YoutubeRemove(usryv,datay)
             
@@ -158,7 +180,7 @@ class newsRemove:
         if cookieval:
             web.setcookie('test',cookieval,3600)
             data= web.input()
-            usrnv= userData['username_']
+            usrnv= userData['user_id']
             datan=data['newsRem']
             NewsRemove(usrnv,datan)
         

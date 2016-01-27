@@ -1,10 +1,10 @@
-$(document).ready(function() {
-window.localStorage.setItem("username","");
-loadcontent();
+$(document).ready(function () {
+    window.localStorage.setItem("username","");
+    loadcontent();
     function loadcontent(){
             $.ajax({
             url: 'http://0.0.0.0:8080/api/',
-            data:{"email":window.localStorage.getItem("username")},
+            data:{"user_id":window.localStorage.getItem("user_id")},
             error: function (e) {console.log(e.error);},
             success: function (data) {
                 showcontent(data);
@@ -12,14 +12,16 @@ loadcontent();
             },
             type: 'GET',dataType:'json'
         });
-    }
+    };
     
-    
+
     
     function showcontent(j_data){
+        
 
         console.log(j_data.length);
         var  data = j_data[0];
+ 
         
         var reddit_str = "";
         for(i=0;i<data['reddit'].length;i++)
@@ -36,6 +38,7 @@ loadcontent();
         $("#twitter_container").html(twitter_str);
         
         var youtube_str = "";
+//        console.log(data['youtube']);
         for(i=0;i<data['youtube'].length;i++)
         {
             youtube_str +='<p class="youtube_del">'+data['youtube'][i]+'</p>' 
@@ -50,6 +53,8 @@ loadcontent();
         $("#news_container").html(news_str);
         
         
+
+        
        
             $(".reddit_del").click(function(){
         console.log($(this).text());
@@ -58,10 +63,10 @@ loadcontent();
             data:{redditRem:$(this).text()},
             error: function (e) {console.log(e.error);},
             success: function (data) {
+                loadcontent();
             },
             type: 'POST'
                     }); 
-            loadcontent();
             });
         
           $(".twitter_del").click(function(){
@@ -71,10 +76,10 @@ loadcontent();
             data:{twitterRem:$(this).text()},
             error: function (e) {console.log(e.error);},
             success: function (data) {
+                loadcontent();
             },
             type: 'POST'
                     }); 
-            loadcontent();
             });
         
         $(".youtube_del").click(function(){
@@ -84,10 +89,10 @@ loadcontent();
             data:{youtubeRem:$(this).text()},
             error: function (e) {console.log(e.error);},
             success: function (data) {
+                loadcontent();
             },
             type: 'POST'
                     }); 
-            loadcontent();
             });
         
         $(".news_del").click(function(){
@@ -97,14 +102,14 @@ loadcontent();
             data:{newsRem:$(this).text()},
             error: function (e) {console.log(e.error);},
             success: function (data) {
+                loadcontent();
             },
             type: 'POST'
                     }); 
-            loadcontent();
             });
 
-    }
     
+   } 
     
    $("#updateBtn").click(function(){ console.log("update");
         $.ajax({
@@ -157,7 +162,7 @@ loadcontent();
         
     })
     
-    $("#newsBtn").click(function(){ console.log("news");
+    $("#newsBtn").click (function(){ console.log("news");
         $.ajax({
             url: 'http://0.0.0.0:8080/news/',
             data:{newsText:$( "#newsText" ).val()},
@@ -169,3 +174,5 @@ loadcontent();
         
     })
 });
+
+
