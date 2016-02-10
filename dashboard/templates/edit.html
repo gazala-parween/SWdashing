@@ -1,7 +1,9 @@
 <!doctype html>
+
 <html lang="en">
 <head>
     <title>ScoopWhoop</title>
+<!--
     <script type="text/javascript">
         <!-- Hide the script from old browsers
         function containsblanks(s)
@@ -18,41 +20,62 @@
           return true;
         } 
     </script>
+-->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="static/css/edit.css">
 </head>
     
-<body style="background-color: lightblue">
+<body style="background-color: #F5F5F5">
     
-<a href="/" >HOME</a>   
+    
+    
+    <div class="container edit_search_main">
+        <form action="/logout/" style="display: inline-block; float: right; margin: 30px; margin-right: 50px;">
+            <input type="submit" value="Logout" class="btn btn-info">
+        </form>
+    
+    <a href="/" oncontextmenu="return false" style="display: inline-block; float: right; margin: 40px;" >HOME</a>
+        <div class="panel-group edit_search">
+            <div class="panel panel-success">
+                <div class="panel-heading">Search for channel Id here:</div>
+                <div class="panel-body">
+                    <tr>
+                        <td>
+                            <input type="text" id = "searchText" placeholder="Enter video id"/>
+                            <div class="post" style="display: none;"></div>
+
+                        </td>
+                        <th>
+                            <label for="search"></label>
+                        </th>
+                        <td>
+                            <button id="searchBtn" name="searchBtn" class="btn btn-success">Search</button>
+                            <div class="post" style="display: none;"></div>
+                        </td>
+                        <td><p id="cid"></p></td>
+                    </tr>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
    <div class="container">
-    
-    <form method="post" class="form-inline" role="form"onSubmit="return(containsblanks(this.userName)">
-        
+
         <table style="width:100%; color:#337ab7" >
+
             <tr>
-                <th>
-                    <label for="set"></label>
-                </th>
-                
-                <td>
-                    <button id="updateBtn" name="update" class="btn btn-warning btn-lg">UPDATE</button>
-                    <div class="post" style="display: none;"></div>
-                </td>
-                
-                <td style="height:100px"></td>
-            
-            </tr>
-            <tr>
-                <td style="height:40px"></td>
+                <td style="height:250px"></td>
             </tr>
 
             <tr>
+                
                 <th>
+                    <span class="editErrMsg" id="redditError">Invalid</span>
                     <label>Reddit:</label>
                 </th>
         
@@ -69,6 +92,7 @@
                 </td>
             
                 <th>
+                    <span class="editErrMsg" id="twitterError">Invalid</span>
                     <label>Twitter:</label>
                 </th>
                 <td>
@@ -99,7 +123,7 @@
                 </td>
             
                 <th>
-                    <label>Newswhip:</label>
+                    <label>ViralStories:</label>
                 </th>
                 <td>
                     <input type="text" id="newsText" placeholder="Enter tags"/>
@@ -114,32 +138,49 @@
                 </td>
             </tr>
             <tr>
-                <td style="height:100px"></td>
+                <td style="height:50px"></td>
             </tr>
-        </table>
-       </form>
 
-<table style="width:100%;color:#337ab7" class="table" >
-    <tr>
+        </table>
+
+      
+       
+            
+<div class="panel panel-info">
+    <table style="width:100%" class="table" >
+        
         <thead>
+            <tr style="background-color: #337AB7; color: #FFF;">
             <th>Your subreddits:</th>
             <th>Your twitter handles:</th>
             <th>Your youtube channels:</th>
-            <th>Your newswhip tags:</th>
+            <th>Your viralStories tags:</th>
+            </tr>
         </thead>
-    </tr>
-    <tbody>
-        <tr class="active">
+    
+        <tbody>
+        <tr class="active" style="color: #337AB7">
             <td id="reddit_container"></td>
             <td id="twitter_container"></td>
             <td id="youtube_container"></td>
             <td id="news_container"></td>
         </tr>
-    </tbody>
-</table>
-
-<script src="static/js/jquery-1.11.1.min.js"></script>
+        </tbody>
+    </table>
+</div>
+    
+       
+<script>
+       var curPage="editPrefrences"
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.js"></script>
+<!--<script src="static/js/jquery-1.11.1.min.js"></script>-->
 <script src="static/js/edit.js"></script>
     </div>
     </body>
 </html>
+
+
+
+
+

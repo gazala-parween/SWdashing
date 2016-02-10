@@ -1,3 +1,4 @@
+$def with (message)
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,24 +10,34 @@
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <script src="static/js/jquery-1.11.1.min.js"></script>
   <script src="static/js/edit.js"></script>
+    <link rel="stylesheet" type="text/css" href="static/css/edit.css">
 </head>
+
     <body>
-        <div class="container">
+        <div class="container login_page" >
+        <p style="color: red">$:message</p>
+        <div class="panel panel-primary loginMainDiv">
+        <div class="panel-heading">SCOOPWHOOP</div>
+            <div class="panel-body">
         <form method="post" class="form-horizontal" role="form">
             <table>
+                <tr><td style="height:15px"></td></tr>
                 <tr>
                     <th>
-                        <label for="username" class="control-label col-sm-2">Username:</label>
+                        <label for="username" class="control-label col-sm-2 loginLabel">Username:</label>
+                        <div class="col-sm-10"></div>
                     </th>
                     <td>
                         <input  type="text" id="username" name="username" class="form-control" 
-                               placeholder="Enter email"/>
+                               placeholder="Enter username"/>
                         <div class="post" style="display: none;"></div>
                     </td>
                 </tr>
+                <tr><td style="height:15px"></td></tr>
                 <tr>
                     <th>
-                        <label for="password" class="control-label col-sm-2">Password:</label>
+                        <label for="password" class="control-label col-sm-2 loginLabel">Password:</label>
+                        <div class="col-sm-10"></div>
                     </th>
                     <td>
                         <input type="password" id="password" name="password" class="form-control" 
@@ -34,17 +45,22 @@
                         <div class="post" style="display: none;"></div>
                     </td>
                 </tr>
+                <tr><td style="height:15px"></td></tr>
                 <tr>
                     <th>
                         <label for="Login"></label>
+                        <div class="col-sm-10"></div>
                     </th>
                     <td>
-                        <button id="Login" name="Login" class="btn btn-info">Login</button>
+                        <button id="Login" name="Login" class="btn btn-warning" style="float: left;"  >Login</button>
                         <div class="post" style="display: none;"></div>
                     </td>
                 </tr>
             </table>
         </form>
+            </div></div>
         </div>
     </body>
 </html>
+
+

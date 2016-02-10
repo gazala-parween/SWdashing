@@ -1,0 +1,61 @@
+.login_page{
+    position: absolute;
+    top: 50%;
+    margin-top: -150px;
+    text-align: center;
+}
+
+.login_page .loginMainDiv{
+    width: 500px;
+    display: inline-block;
+}
+.loginLabel{
+    width: 165px;
+    color: #337AB7;
+}
+
+.edit_search_main{
+    position: absolute;
+    width: 100%;
+    text-align: center;
+}
+
+.edit_search_main .edit_search{
+
+    display: inline-block;
+    margin-top: -66px;
+    float: left;
+    margin-left: 55px;
+    clear: both;
+}
+
+.createUserAdd{
+    float: left;
+    width: 40%;
+    text-align: center;
+    margin-top: 150px;
+    margin-left: 30px;
+    
+}
+.createUserList{
+    float: right;
+    width: 50%;
+    text-align: center;
+    margin-top: 49px;
+    margin-right: 30px;
+}
+
+.createUserLabels{
+    width: 166px;
+    color: #3C764B;
+}
+
+
+.editErrMsg{
+    position: absolute;
+    margin-top: -25px;
+    color: red;
+    margin-left: 38px;
+    font-family: monospace;
+    display: none;
+}

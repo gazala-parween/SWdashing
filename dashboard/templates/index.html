@@ -3,32 +3,39 @@ $def with (user)
 <html>
     <head>
         <title>ScoopWhoop</title>
+<!--
         <script>
             function goToURL() { 
                 location.href = '/edit';
             }
         </script>
+-->
+<!--        onclick="goToURL(); return false"-->
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     </head>
     
-    <body style="background-color: lightblue">
+    <body style="background-color: #F0F0F0">
         <form action="/logout/" style="display: inline-block; float: right; margin: 30px;">
             <input type="submit" value="Logout" class="btn btn-info">
         </form>
 
         <div class="post" style="display: none;"></div>
-        <h1 style="color:blue;">Welcome $user['username_']!!</h1> 
-        <a href="javascript:void(0)" onclick="goToURL(); return false;" >SET PREFRENCES</a>
+        <h1 style="color:#606060 ;font-style: italic; display: inline-block;">Welcome $user['username_']!!</h1> 
         
-        <a href="/createUser/" oncontextmenu="return false">CREATE USER</a>
+        <a href="/edit" oncontextmenu="return false" style="display: inline-block; float: right; margin: 30px;" >SET PREFRENCES</a>
         
-        <iframe src="http://0.0.0.0:3030/$user['user_id']" width="1260" height="600">
-        </iframe>
+        <a href="/createUser" oncontextmenu="return false" style="display: inline-block; float: right; margin: 30px;">CREATE USER</a>
+        
+        <iframe src="http://0.0.0.0:3030/$user['user_id']" width="1260" height="600"></iframe>
+        
         <script>
-       console.log("$user['user_id']");
+            var curPage="index";
+            console.log("$user['user_id']");
             window.localStorage.setItem("user_id","$user['user_id']");
         </script>
         <script src="static/js/jquery-1.11.1.min.js"></script>
         <script src="static/js/edit.js"></script>
-        <script></script>
     </body>    
 </html>

@@ -2,13 +2,14 @@
 # -*- coding: utf-8 -*-
 import pymongo
 import json
+import requests
 import time
 import os
 import subprocess
 from bson import ObjectId
 from pymongo import MongoClient
 from shutil import copyfile
-
+import urllib
 
 
 client = MongoClient('localhost', 27017)
@@ -20,7 +21,6 @@ def Login(uname):
     return str(val['_id'])
     
     
-
 def Check(usr_, pass_):
     check_var = db.users.find({'username': usr_})
     for val_ in check_var:
@@ -36,11 +36,9 @@ def CreateUser(data_):
     val=db.users.find_one({'username': usr})
     if val is None:
         db.users.insert({'username':usr,'password':pas,'permission':perm}) 
+#        subprocess.call("bash /Users/dashing.sh", shell=True)
     val=db.users.find_one({'username':usr})
     return val
-
-#    for v in val:
-#        return v['_id'],v['username']
 
 def CreateRecord(o_idR,u_nameR):
     val=db.prefrences.find_one({'_id': o_idR})
@@ -55,40 +53,40 @@ def CreateRubyDashboard(o_idD):
     <div class="gridster">
         <ul>
         <li data-row="1" data-col="1" data-sizex="4" data-sizey="2">
-        <div data-id='news"""+o_idD+"""' data-view="List3" data-title="NewsWhip" ></div>
+        <div data-id='news_"""+o_idD+"""' data-view="List3" data-title="Viral Stories" ></div>
         </li>
             <li data-row="2" data-col="1" data-sizex="2" data-sizey="1">
-       <div data-id='twitter_mentions1"""+o_idD+"""' data-view="Comments" data-title="Tweets" style="background-color: #71388a"></div>
+       <div data-id='twitter_mentions1_"""+o_idD+"""' data-view="Comments" data-title="Tweets" style="background-color: #71388a"></div>
     </li>
 	
 	<li data-row="2" data-col="1" data-sizex="2" data-sizey="1">
-       <div data-id='twitter_mentions2"""+o_idD+"""' data-view="Comments" data-title="Tweets" style="background-color: #71388a"></div>
+       <div data-id='twitter_mentions2_"""+o_idD+"""' data-view="Comments" data-title="Tweets" style="background-color: #71388a"></div>
     </li>
 	
 	<li data-row="2" data-col="1" data-sizex="2" data-sizey="1">
-       <div data-id='twitter_mentions3"""+o_idD+"""' data-view="Comments" data-title="Tweets" style="background-color: #71388a"></div>
+       <div data-id='twitter_mentions3_"""+o_idD+"""' data-view="Comments" data-title="Tweets" style="background-color: #71388a"></div>
     </li>
 	
 	<li data-row="2" data-col="1" data-sizex="2" data-sizey="1">
-       <div data-id='twitter_mentions4"""+o_idD+"""' data-view="Comments" data-title="Tweets" style="background-color: #71388a"></div>
+       <div data-id='twitter_mentions4_"""+o_idD+"""' data-view="Comments" data-title="Tweets" style="background-color: #71388a"></div>
     </li>
         <li data-row="1" data-col="1" data-sizex="4" data-sizey="1">
-		<div data-id='reddit"""+o_idD+"""' data-view="Reddit" ></div>
+		<div data-id='reddit_"""+o_idD+"""' data-view="Reddit" ></div>
 	    </li>
             <li data-row="1" data-col="1" data-sizex="2" data-sizey="1" data-sizey="1">
-        <div data-id='youtube_player1"""+o_idD+"""' data-view="Iframe" data-title="Channel: OYO" style="background-color: #c0392b"></div>
+        <div data-id='youtube_player1_"""+o_idD+"""' data-view="Iframe" style="background-color: #c0392b"></div>
     </li>
 	
 	<li data-row="1" data-col="1" data-sizex="2" data-sizey="1" data-sizey="1">
-        <div data-id='youtube_player2"""+o_idD+"""' data-view="Iframe" data-title="Channel: ScoopWhoop" style="background-color: #c0392b"></div>
+        <div data-id='youtube_player2_"""+o_idD+"""' data-view="Iframe" style="background-color: #c0392b"></div>
     </li>
 	
 	<li data-row="1" data-col="1" data-sizex="2" data-sizey="1" data-sizey="1">
-        <div data-id='youtube_player3"""+o_idD+"""' data-view="Iframe" data-title="Channel: TVF" style="background-color: #c0392b"></div>
+        <div data-id='youtube_player3_"""+o_idD+"""' data-view="Iframe" style="background-color: #c0392b"></div>
     </li>
 	
 	<li data-row="1" data-col="1" data-sizex="2" data-sizey="1" data-sizey="1">
-        <div data-id='youtube_player4"""+o_idD+"""' data-view="Iframe" data-title="Channel: AIB" style="background-color: #c0392b"></div>
+        <div data-id='youtube_player4_"""+o_idD+"""' data-view="Iframe" style="background-color: #c0392b"></div>
     </li>
     </ul>
    </div> """
@@ -100,7 +98,7 @@ def CreateRubyDashboard(o_idD):
     
     
 def CreateRubyJob(o_idJ):
-#    rus=username_
+
     content2=""" 
 require 'net/http'
 require 'json'
@@ -108,33 +106,28 @@ require 'twitter'
 require 'openssl'
 
 		
+def getTopPostsPerSubreddit()  
 
-class Reddit
-   
-    def getTopPostsPerSubreddit()  
-        #puts "hello"
     uri = URI('http://0.0.0.0:8080/api/?user_id="""+o_idJ+"""')
-        response = Net::HTTP.get(uri)
-        #puts response
-        data = JSON.parse(response)
-        #puts data
-        subreddit =Array.new
+    response = Net::HTTP.get(uri)
+
+    data = JSON.parse(response)
+
+    subreddit =Array.new
     
-        for d in data
-            subreddit = d['reddit']
-        end
-        response = []
-        posts = [];
-        #print subreddit
+    subreddit =  data[0]['reddit']
+    response = []
+    posts = [];
+   if subreddit.length>0
+
         for it in subreddit
-            #puts it
             url = URI("https://www.reddit.com"+it+"/.json")
             data = Net::HTTP.get(url)
             response = JSON.parse(data)
-            
+
             items = []
             mastr_ar = response['data']['children']
-            
+
             for item_ in mastr_ar[0..4]
                 title = item_['data']['title']
                 trimmed_title = title[0..85].gsub(/\s\w+$/, '...')
@@ -146,27 +139,23 @@ class Reddit
             end
             posts.push({ label: 'Current top posts in "' + it + '"', items: items })
         end
-        
-     posts
-    end
+   end  
+    return posts
 end
 
-@Reddit = Reddit.new();
+
 
 SCHEDULER.every '20s', :first_in => 0 do |job|
-  
-  posts = @Reddit.getTopPostsPerSubreddit
+  posts = getTopPostsPerSubreddit
     
-  send_event('reddit"""+o_idJ+"""', { :posts => posts })
+  send_event('reddit_"""+o_idJ+"""', { :posts => posts })
 end		
 
-#-----------------------------------------------------------------------------------------------------
+#--------------------------TWITTER---------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------
 
-###ENV['SSL_CERT_FILE'] = File.expand_path('../cacert.pem', __FILE__)
+
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
-#### Get your twitter keys & secrets:
-#### https://dev.twitter.com/docs/auth/tokens-devtwittercom
 twitter = Twitter::REST::Client.new do |config|
   config.consumer_key = 'Mqn1gEwkThO7puYnXQW8wJzEv'
   config.consumer_secret = 'p27JR9z378Ma9qbdhoRfPnI5ISnQUtFepMirzXhFGPyI9JuTHV'
@@ -179,13 +168,11 @@ SCHEDULER.every '20s', :first_in => 0 do |job|
     uri = URI('http://0.0.0.0:8080/api/?user_id="""+o_idJ+"""')
     response = Net::HTTP.get(uri)
     data = JSON.parse(response)    
-
+#if data.length>0
     handles =Array.new
 
-    for d in data
-        handles = d['twitter']
-    end
-    
+    handles=data[0]['twitter']
+    if handles.length>0
     twee_arr =Array.new
     for h in handles
         tweets = twitter.user_timeline(h)
@@ -198,128 +185,121 @@ SCHEDULER.every '20s', :first_in => 0 do |job|
         #puts twee_arr
     end
    
-      send_event('twitter_mentions1"""+o_idJ+"""', comments: twee_arr[0])
-      send_event('twitter_mentions2"""+o_idJ+"""', comments: twee_arr[1])
-	  send_event('twitter_mentions3"""+o_idJ+"""', comments: twee_arr[2])
-      send_event('twitter_mentions4"""+o_idJ+"""', comments: twee_arr[3])
-    
+      send_event('twitter_mentions1_"""+o_idJ+"""', comments: twee_arr[0])
+      send_event('twitter_mentions2_"""+o_idJ+"""', comments: twee_arr[1])
+	  send_event('twitter_mentions3_"""+o_idJ+"""', comments: twee_arr[2])
+      send_event('twitter_mentions4_"""+o_idJ+"""', comments: twee_arr[3])
+    end
+#end
 end
 
-
-#-----------------------------------------------------------------------------------------------------
+#-----------------------------NEWSWHIP------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------
 
-		
+
 SCHEDULER.every '20s', :first_in => 0 do |job|
   min = 0
   page_size= 5
-    uri = URI('http://www.newswhip.com/api/v1/region/France/all/2?key=AHwaqz7hApx9D')
-  response = Net::HTTP.get(uri) # => String
+    uri = URI('http://0.0.0.0:8080/api/?user_id="""+o_idJ+"""')
+    response = Net::HTTP.get(uri)
+    data = JSON.parse(response)    
 
-  data = JSON.parse(response)
-
-  newswhip_article = Array.new
-
-  data['articles'].each do |arr|
-    newswhip_article.push({
-    label: arr['headline'],
-	value: arr['source']['publisher'],
-	value2: arr['fb_data']['like_count'] + arr['tw_data']['tw_count']})
-  end
-	
-  max = newswhip_article.length
-	
-  while max > (min+page_size)
-    send_event('news"""+o_idJ+"""', { items: newswhip_article.slice(min, page_size)})
-	sleep(10)
-	 
-	min = min + page_size
+    tags =Array.new
+    tags = data[0]['news']
+    
+    if tags.length>0
         
-  end
-  
-  send_event('news"""+o_idJ+"""', { items: newswhip_article.slice(min..max)})
-	 
+        for t in tags do
+            uri = URI('https://api.newswhip.com/v1/search?q='+t+'&key=AHwaqz7hApx9D')
+            response = Net::HTTP.get(uri)
+            data = JSON.parse(response)
+            newswhip_article = Array.new
+
+            data['articles'].each do |arr|
+                newswhip_article.push({
+                    label: arr['headline'],
+                    value: arr['source']['publisher'],
+                    value2: arr['fb_data']['like_count'] + arr['tw_data']['tw_count']})
+                end
+        end
+
+        max = newswhip_article.length
+        while max > (min+page_size)
+            send_event('news_"""+o_idJ+"""', { items: newswhip_article.slice(min, page_size)})
+            sleep(10)
+            min = min + page_size
+        end
+        send_event('news_"""+o_idJ+"""', { items: newswhip_article.slice(min..max)})
+    end
+     
 end
 
-#-----------------------------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------------------------------
 
+##----------------------------YOUTUBE-------------------------------------------------------------------------
+##-------------------------------------------------------------------------------------------------------
+#
+#
+SCHEDULER.every '2m', :first_in => 0 do |job|
+    
+uri = URI('http://0.0.0.0:8080/api/?user_id="""+o_idJ+"""')
+response = Net::HTTP.get(uri)
+data = JSON.parse(response)    
+channel =Array.new
+channel = data[0]['youtube']
+    
+def video_stats(v_id)
+  uri = URI("https://www.googleapis.com/youtube/v3/videos?part=statistics&id="+v_id.to_s+"&key=AIzaSyBlRhNVLNqIO9UBBfw8HtV2MZkMeS0Y_q0")
+  response = Net::HTTP.get(uri)
+  data = JSON.parse(response)
+  return data['items'][0]['statistics']['viewCount']
+end
 
-SCHEDULER.every '20s', :first_in => 0 do |job|
-  
-  def video_stats(v_id)
-	uri = URI("https://www.googleapis.com/youtube/v3/videos?part=statistics&id=
-	"+v_id.to_s+"&key=AIzaSyBlRhNVLNqIO9UBBfw8HtV2MZkMeS0Y_q0")
-    response = Net::HTTP.get(uri) # => String
-    data = JSON.parse(response)
-	return data['items'][0]['statistics']['viewCount']
-  end
-
-
-  puts "i m in yu"
 
  def video_player(channelId)
- #print channelId
-  uri=URI("https://www.googleapis.com/youtube/v3/search?part=snippet&channelId="+channelId+"&order=date&maxResults=5&key=AIzaSyBlRhNVLNqIO9UBBfw8HtV2MZkMeS0Y_q0")
-  response = Net::HTTP.get(uri) # => String
-  
-  data = JSON.parse(response)
-
-  
-  youtube_videos = Array.new
-	
-  data['items'].each do |video|
-      youtube_videos.push({
-        label: video['snippet']['title'],
-        value: video['id']['videoId'],
-		value1:video_stats(video['id']['videoId'])
-      })
-   end   
-  
- 
-  
-  url_array = Array.new
-  
-   
-  for each in youtube_videos do
-	url = "http://www.youtube.com/embed/#{each[:value]}?autoplay=1"
-	  
-	url_array.push({
-        :yurl => url,
-		:title => each[:label],
-		:count => each[:value1] 
-        } )
-  end
-  #puts url_array
-  return url_array
+     uri=URI("https://www.googleapis.com/youtube/v3/search?part=snippet&channelId="+channelId+"&order=date&maxResults=5&key=AIzaSyBlRhNVLNqIO9UBBfw8HtV2MZkMeS0Y_q0")
+     response = Net::HTTP.get(uri)
+     data = JSON.parse(response)
+     youtube_videos = Array.new
+    
+     for item in data['items']
+         if item['id']['videoId']!=nil
+         data_ ={label: item['snippet']['title'],value: item['id']['videoId'],value1:video_stats(item['id']['videoId'])}
+         youtube_videos.push(data_)
+         end
+     end   
+    
+     url_array = Array.new
+     for each in youtube_videos do
+         url = "http://www.youtube.com/embed/#{each[:value]}?autoplay=1"
+         url_array.push({
+             :yurl => url,
+             :title => each[:label],
+             :count => each[:value1] 
+             })
+     end
+    return url_array
+ end
+    
+if channel.length>0
+channel_arr = Array.new
+for ch_ in channel
+    channel_arr.push(video_player(ch_))
  end
  
-
- ch_id = ["UC1b6tyXZTHdIZ5vmgoAqn9w","UCx2HcmpB-UZGkMXOCJ4QIVA","UCNJcSUSzUeFm8W9P7UUlSeQ","UCzUYuC_9XdUUdrnyLii8WYg"]
- channel_arr = Array.new
- 
- for ch_ in ch_id do
-   channel_arr.push(video_player(ch_))
- end
- 
- 
-#puts channel_arr
-
 min=0
 len=1  
 arr = []
- 
- for i in 0..4
-	send_event('youtube_player1"""+o_idJ+"""', { :items => channel_arr[0].slice(min, len) })
-	send_event('youtube_player2"""+o_idJ+"""', { :items => channel_arr[1].slice(min, len) })
-	send_event('youtube_player3"""+o_idJ+"""', { :items => channel_arr[2].slice(min, len) })
-	send_event('youtube_player4"""+o_idJ+"""', { :items => channel_arr[3].slice(min, len) })
-    sleep(60)
-    min=min+1    
- end
-
+    k=0
+    for i in channel_arr[0..5]
+        send_event('youtube_player'+(k+1).to_s+'_"""+o_idJ+"""', { :items => i.slice(min, len) })
+        k+=1
+        sleep(60)
+        min=min+1  
+    end    
+    
 end
-
+end
+    
 
     """
 
@@ -330,33 +310,53 @@ end
 
     
 def Reddit(usr_r, text_r):
-    val=db.prefrences.find({'user_id': usr_r})
-    for v in val:
-        var_ = v['reddit']
-        if text_r in var_:
-            return False
-        else:
-            collection.find_and_modify(query = {'user_id': usr_r}, update = {'$push':{ 'reddit': text_r}},upsert=True)
-    
+    ur=urllib.urlopen('https://www.reddit.com'+text_r+'/.json')
+    if ur.getcode() == 200:
+        val=db.prefrences.find({'user_id': usr_r})
+        for v in val:
+            var_ = v['reddit']
+            if text_r in var_:
+                return False
+            else:
+                collection.find_and_modify(query = {'user_id': usr_r}, update = {'$push':{ 'reddit': text_r}},upsert=True)
+                return True
+    else:
+        return False
     
 def Twitter(usr_t, text_t):
-    val=db.prefrences.find({'user_id': usr_t})
-    for v in val:
-        var_ = v['twitter']
-        if text_t in var_:
-            return False
-        else:
-            collection.find_and_modify(query = {'user_id': usr_t}, update = {'$push':{ 'twitter': text_t}},upsert=True)
-    
+    ur=urllib.urlopen('https://twitter.com/'+text_t)
+    print ur.getcode()
+    if ur.getcode() == 200:
+        val=db.prefrences.find({'user_id': usr_t})
+        for v in val:
+            var_ = v['twitter']
+            if text_t in var_:
+                return False
+            else:
+                if len(var_)<4:
+                    collection.find_and_modify(query = {'user_id': usr_t}, update = {'$push':{ 'twitter': text_t}},upsert=True)
+                    return True
+                else:
+                    return False
+    else:
+        return False
     
 def Youtube(usr_y, text_y):
-    val=db.prefrences.find({'user_id': usr_y})
-    for v in val:
-        var_ = v['youtube']
-        if text_y in var_:
-            return False
-        else:
-            collection.find_and_modify(query = {'user_id': usr_y}, update = {'$push':{ 'youtube': text_y}},upsert=True)
+    ur=urllib.urlopen('https://www.youtube.com/channel/'+text_y)
+    if ur.getcode() == 200:
+        val=db.prefrences.find({'user_id': usr_y})
+        for v in val:
+            var_ = v['youtube']
+            if text_y in var_:
+                return False
+            else:
+                if len(var_)<4:
+                    collection.find_and_modify(query = {'user_id': usr_y}, update = {'$push':{ 'youtube': text_y}},upsert=True)
+                    return True
+                else:
+                    return False
+    else:
+        return False
     
 def News(usr_n, text_n):
     val=db.prefrences.find({'user_id': usr_n})
@@ -366,10 +366,11 @@ def News(usr_n, text_n):
             return False
         else:
             collection.find_and_modify(query = {'user_id': usr_n}, update = {'$push':{ 'news': text_n}},upsert=True)
+            return True
 
     
 def Api(id_):
-#def Api():
+
     cursor = db.prefrences.find({'user_id': id_}) 
 #    cursor = db.prefrences.find() 
     json_c = []
@@ -416,14 +417,46 @@ def NewsRemove(usr_nv,data_nv):
     collection.find_and_modify(query = {'user_id': usr_nv}, update = {'$set':{ 'news': news_var}},upsert=True)
     
     
-def Update():
-    """os.chdir('sweet_dashboard_project')
-    subprocess.call(["ls", "-l"])
-    subprocess.call("dashing stop", shell=True)"""
-    subprocess.call("bash /Users/Yu/dashing.sh", shell=True)
+def Youtube_channelId_search(data_):
+    video_id =data_
+    req = requests.get("https://www.googleapis.com/youtube/v3/videos?id="+video_id+"&key=AIzaSyAeulKzsOmOn7-QYZeIpu3lDFTQI2PnUPI&part=snippet,contentDetails,statistics,status")
+    data = json.loads(req.text)
+#    print data
+    for d in data['items']:
+            channel_id = d['snippet']['channelId']
+            channel_title = d['snippet']['channelTitle']
+            return channel_id
     
     
+#def Update():
+#    """os.chdir('sweet_dashboard_project')
+#    subprocess.call(["ls", "-l"])
+#    subprocess.call("dashing stop", shell=True)"""
+#    subprocess.call("bash /Users/Kumar/dashing.sh", shell=True)
     
-    
-   
 
+
+def UserApi():
+
+    cursor = db.users.find() 
+    json_c = []
+    for d in cursor:
+        d['_id'] = str(d['_id'])
+        dd = d
+        json_c.append(dd)
+    return json.dumps(json_c) 
+    
+    
+def UserRemove(usr_name):
+
+    val2=collection.find_one({'username': usr_name})
+    uid= val2['user_id']
+    db.prefrences.remove({'user_id': uid})
+    
+    val=db.users.find_one({'username': usr_name})
+    usrid= val['_id']
+    db.users.remove({'_id': usrid})
+    
+    
+    
+    

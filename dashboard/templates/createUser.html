@@ -1,67 +1,110 @@
 <!DOCTYPE html>
 <html>
     <head>
-    <title>ScoopWhoop</title>
+        <title>ScoopWhoop</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="static/css/edit.css">
     </head>
 
-    <body>
-        <div class="container">
-        <form method="post" class="form-horizontal" role="form">
-            <table>
-                <tr>
-                    <th>
-                        <label for="username" class="control-label col-sm-2">Username:</label>
-                    </th>
-                    <td>
-                        <input  type="text" id="username" name="username" class="form-control" 
-                               placeholder="Enter username"/>
-                        <div class="post" style="display: none;"></div>
-                    </td>
-                </tr>
-<!--
-                <tr>
-                    <th>
-                        <label for="email" class="control-label col-sm-2">EmailID:</label>
-                    </th>
-                    <td>
-                        <input  type="text" id="email" name="email" class="form-control" 
-                               placeholder="Enter email"/>
-                        <div class="post" style="display: none;"></div>
-                    </td>
-                </tr>
--->
-                <tr>
-                    <th>
-                        <label for="password" class="control-label col-sm-2">Password:</label>
-                    </th>
-                    <td>
-                        <input type="password" id="password" name="password" class="form-control" 
-                               placeholder="Enter Password"/>
-                        <div class="post" style="display: none;"></div>
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        <label for="permission"></label>
-                    </th>
-                    <td>
-                        <input class="radioitem" type="radio" id="r1" name="permission" value="user">User
-                        <input class="radioitem" type="radio"id="r2"  name="permission" value="admin" >Admin<br>
-                        <div class="post" style="display: none;"></div>
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        <label for="create"></label>
-                    </th>
-                    <td>
-                        <button id="create" name="create" class="btn btn-info">Create</button>
-                        <a href="/" >Cancel</a>   
-                        <div class="post" style="display: none;"></div>
-                    </td>
-                </tr>
-            </table>
+    <body style="background-color: #F5F5F5">
+        
+        <form action="/logout/" style="display: inline-block; float: right; margin: 30px; margin-right: 50px;">
+            <input type="submit" value="Logout" class="btn btn-info">
         </form>
+        
+        <a href="/" oncontextmenu="return false" style="display: inline-block; float: right; margin: 40px;" >HOME</a>
+        
+        <div class="container createUserAdd">
+            <div class="panel-group">
+                <div class="panel panel-success">
+                    <div class="panel-heading">Add New Users</div>
+                        <div class="panel-body">
+                            <form method="post" class="form-horizontal" role="form">
+                                <table>
+                                    <tr><td style="height:15px"></td></tr>
+                                    <tr>
+                                        <th>
+                                            <label for="username" class="control-label col-sm-2 createUserLabels">Set Username:</label>
+                                        </th>
+                                        <td>
+                                            <input  type="text" id="username" name="username" class="form-control" 
+                                                   placeholder="Enter username"/>
+                                            <div class="post" style="display: none;"></div>
+                                        </td>
+                                    </tr>
+                                    <tr><td style="height:15px"></td></tr>
+                    <!--
+                                    <tr>
+                                        <th>
+                                            <label for="email" class="control-label col-sm-2">EmailID:</label>
+                                        </th>
+                                        <td>
+                                            <input  type="text" id="email" name="email" class="form-control" 
+                                                   placeholder="Enter email"/>
+                                            <div class="post" style="display: none;"></div>
+                                        </td>
+                                    </tr>
+                    -->
+                                    <tr>
+                                        <th>
+                                            <label for="password" class="control-label col-sm-2 createUserLabels">Set Password:</label>
+                                        </th>
+                                        <td>
+                                            <input type="password" id="password" name="password" class="form-control" 
+                                                   placeholder="Enter Password"/>
+                                            <div class="post" style="display: none;"></div>
+                                        </td>
+                                    </tr>
+                                    <tr><td style="height:15px"></td></tr>
+                                    <tr>
+                                        <th>
+                                            <label for="permission" class="control-label col-sm-2 createUserLabels">Set Permission:</label>
+                                        </th>
+                                        <td>
+                                            <input class="radioitem" type="radio" id="r1" name="permission" value="user">User
+                                            <input class="radioitem" type="radio"id="r2"  name="permission" value="admin" 
+                                                   style="margin-left: 20px;" >Admin<br>
+                                            <div class="post" style="display: none;"></div>
+                                        </td>
+                                    </tr>
+                                    <tr><td style="height:15px"></td></tr>
+                                    <tr>
+                                        <th>
+                                            <label for="create" class=" control-label col-sm-2 createUserLabels"></label>
+                                        </th>
+                                        <td>
+                                            <button id="create" name="create" class="btn btn-success">Create</button>
+
+                                            <div class="post" style="display: none;"></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                    </div>
+                </div>
+            </div>
         </div>
-    </body>
+        
+        <div class="container createUserList">
+            <div class="panel-group">
+                <div class="panel panel-info">
+                    <div class="panel-heading">List Of Users</div>
+                        <div class="panel-body" id="user_container" style="color: #31708f">
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+<script>
+       var curPage="createUser"
+</script>
+
+<script src="static/js/jquery-1.11.1.min.js"></script>
+<script src="static/js/edit.js"></script>
+            
+        </body>
   </html>  

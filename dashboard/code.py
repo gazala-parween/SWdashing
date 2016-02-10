@@ -4,11 +4,12 @@ import base64
 import web
 import json
 from vali import *
+#from whoosh import *
 #from http import cookies
 
 render = web.template.render('templates/')
 urls = (
-    '/','index','/edit','edit','/reddit/','reddit','/twitter/','twitter','/youtube/','youtube','/news/','news','/api/','api','/redditRemove/','redditRemove','/twitterRemove/','twitterRemove','/youtubeRemove/','youtubeRemove','/newsRemove/','newsRemove','/update/','update','/logout/','logout','/login','login','/createUser/','createUser'
+    '/','index','/edit','edit','/reddit/','reddit','/twitter/','twitter','/youtube/','youtube','/news/','news','/api/','api','/redditRemove/','redditRemove','/twitterRemove/','twitterRemove','/youtubeRemove/','youtubeRemove','/newsRemove/','newsRemove','/update/','update','/logout/','logout','/login','login','/createUser','createUser','/youtubeChannelId/','youtubeChannelId','/userApi/','userApi','/userRemove/','userRemove'
 )
 
 app = web.application(urls, globals())
@@ -19,7 +20,7 @@ session = web.session.Session(app, web.session.DiskStore('sessions'))
 
 class login:
     def GET(self):
-        return render.login()
+        return render.login("")
 
     def POST(self):
         login= web.input()
@@ -35,7 +36,7 @@ class login:
             raise web.seeother('/')
             
         else:
-            return render.login()
+            return render.login("INVALID CREDENTIALS!!")
         
 class logout:
     def GET(self):
@@ -87,7 +88,13 @@ class reddit:
             data= web.input()
             usrr= userData['user_id']
             textr= data['redditText']
-            Reddit(usrr,textr)
+            chk=Reddit(usrr,textr)
+            if chk:
+                return json.dumps({"status":1})
+            else:
+                return json.dumps({"status":0})
+            
+            
         
 class twitter:
     def POST(self):
@@ -99,7 +106,11 @@ class twitter:
             data= web.input()
             usrt= userData['user_id']
             textt= data['twitterText']
-            Twitter(usrt,textt)
+            chk=Twitter(usrt,textt)
+            if chk:
+                return json.dumps({"status":1})
+            else:
+                return json.dumps({"status":0})
         
 class youtube:
     def POST(self):
@@ -111,7 +122,11 @@ class youtube:
             data= web.input()
             usry= userData['user_id']
             texty= data['youtubeText']
-            Youtube(usry,texty)
+            chk=Youtube(usry,texty)
+            if chk:
+                return json.dumps({"status":1})
+            else:
+                return json.dumps({"status":0})
             
 class news:
     def POST(self):
@@ -121,9 +136,14 @@ class news:
             web.header('Content-Type', 'application/json')
             web.header("Access-Control-Allow-Origin","*")
             data= web.input()
+            print data
             usrn= userData['user_id']
             textn= data['newsText']
-            News(usrn,textn)
+            chk=News(usrn,textn)
+            if chk:
+                return json.dumps({"status":1})
+            else:
+                return json.dumps({"status":0})
         
 class api:
     def GET(self):
@@ -183,6 +203,16 @@ class newsRemove:
             usrnv= userData['user_id']
             datan=data['newsRem']
             NewsRemove(usrnv,datan)
+            
+class youtubeChannelId:
+    def GET(self):
+        data= web.input()
+        
+        d=data['searchText']
+        #print d
+        ch_id=Youtube_channelId_search(d)
+        #print ch_id
+        return ch_id
         
 class update:
     def GET(self):
@@ -192,7 +222,29 @@ class update:
             data=web.input()
             Update()
         
-          
+
+        
+class whoosh:
+    def GET(self):
+        usrw= userData['user_id']
+        WhooshSearch(usrw)
+        
+        
+class userApi:
+    def GET(self):
+        db=UserApi()
+        return db
+    
+class userRemove:
+     def POST(self):
+        cookieval=web.cookies().get('test')
+        if cookieval:
+            web.setcookie('test',cookieval,3600)
+            data= web.input()
+            usrName=data['userRem']
+            UserRemove(usrName)
+            
+
 if __name__ == "__main__":
     
     app.run()
