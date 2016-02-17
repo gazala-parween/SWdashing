@@ -4,19 +4,16 @@ import base64
 import web
 import json
 from vali import *
-#from whoosh import *
-#from http import cookies
+
 
 render = web.template.render('templates/')
 urls = (
-    '/','index','/edit','edit','/reddit/','reddit','/twitter/','twitter','/youtube/','youtube','/news/','news','/api/','api','/redditRemove/','redditRemove','/twitterRemove/','twitterRemove','/youtubeRemove/','youtubeRemove','/newsRemove/','newsRemove','/update/','update','/logout/','logout','/login','login','/createUser','createUser','/youtubeChannelId/','youtubeChannelId','/userApi/','userApi','/userRemove/','userRemove'
+    '/','index','/edit','edit','/reddit/','reddit','/twitter/','twitter','/youtube/','youtube','/news/','news','/api/','api','/redditRemove/','redditRemove','/twitterRemove/','twitterRemove','/youtubeRemove/','youtubeRemove','/newsRemove/','newsRemove','/update/','update','/logout/','logout','/login','login','/createUser','createUser','/youtubeChannelId/','youtubeChannelId','/userApi/','userApi','/userRemove/','userRemove','/whooshSearch/','whooshSearch'
 )
 
 app = web.application(urls, globals())
-userData = {'username_':"",'password_':"",'user_id':""}
+userData = {'username_':"",'password_':"",'user_id':"",'perm':""}
 session = web.session.Session(app, web.session.DiskStore('sessions'))
-
-
 
 class login:
     def GET(self):
@@ -31,10 +28,12 @@ class login:
             cookiestr= str(userData['username_'])
             cookie=base64.b64encode(cookiestr).decode('ascii')
             web.setcookie('test', cookie, 3600)
-            #print "login post"
-            userData['user_id']=Login(userData['username_'])
+            valLog=Login(userData['username_'])
+            userData['user_id']=str(valLog['_id'])
+            userData['perm']=valLog['permission']
+            print userData['user_id']
+            print userData['perm']
             raise web.seeother('/')
-            
         else:
             return render.login("INVALID CREDENTIALS!!")
         
@@ -147,17 +146,11 @@ class news:
         
 class api:
     def GET(self):
-#        cookieval=web.cookies().get('test')
-#        if cookieval:
-#            web.setcookie('test',cookieval,3600)
         usra= userData['user_id']
         _id = userData['user_id'] 
-#            data = Api(_id)
-
         i= web.input()
-        print i.user_id
+#         print i.user_id
         data = Api(i.user_id)
-#            data = Api()
         web.header('Content-Type', 'application/json')
         web.header("Access-Control-Allow-Origin","*")
         return json.dumps(data)
@@ -207,11 +200,8 @@ class newsRemove:
 class youtubeChannelId:
     def GET(self):
         data= web.input()
-        
         d=data['searchText']
-        #print d
         ch_id=Youtube_channelId_search(d)
-        #print ch_id
         return ch_id
         
 class update:
@@ -221,14 +211,14 @@ class update:
             web.setcookie('test',cookieval,3600)
             data=web.input()
             Update()
-        
-
-        
-class whoosh:
+            
+class whooshSearch:
     def GET(self):
-        usrw= userData['user_id']
-        WhooshSearch(usrw)
-        
+      		web.header('Content-Type', 'application/json')
+       		web.header("Access-Control-Allow-Origin","*")
+       		i= web.input()
+       		pre_= WhooshSearch(i.user_id)
+       		return json.dumps(pre_)
         
 class userApi:
     def GET(self):
@@ -243,12 +233,15 @@ class userRemove:
             data= web.input()
             usrName=data['userRem']
             UserRemove(usrName)
-            
+
 
 if __name__ == "__main__":
     
     app.run()
     
+
+
+
     
     
     

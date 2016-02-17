@@ -10,6 +10,11 @@ from bson import ObjectId
 from pymongo import MongoClient
 from shutil import copyfile
 import urllib
+from whoosh.index import open_dir
+from whoosh.query import Every
+import petl as etl
+from whoosh.qparser import QueryParser
+from whoosh.qparser import MultifieldParser
 
 
 client = MongoClient('localhost', 27017)
@@ -18,9 +23,8 @@ collection = db.prefrences
 
 def Login(uname):
     val=db.users.find_one({'username':uname})
-    return str(val['_id'])
-    
-    
+    return val
+
 def Check(usr_, pass_):
     check_var = db.users.find({'username': usr_})
     for val_ in check_var:
@@ -36,7 +40,7 @@ def CreateUser(data_):
     val=db.users.find_one({'username': usr})
     if val is None:
         db.users.insert({'username':usr,'password':pas,'permission':perm}) 
-#        subprocess.call("bash /Users/dashing.sh", shell=True)
+        subprocess.call("bash /Users/Yu/dashing.sh", shell=True)
     val=db.users.find_one({'username':usr})
     return val
 
@@ -52,43 +56,46 @@ def CreateRubyDashboard(o_idD):
 <% content_for :title do %>My super sweet dashboard<% end %>
     <div class="gridster">
         <ul>
-        <li data-row="1" data-col="1" data-sizex="4" data-sizey="2">
-        <div data-id='news_"""+o_idD+"""' data-view="List3" data-title="Viral Stories" ></div>
-        </li>
+            <li data-row="1" data-col="1" data-sizex="4" data-sizey="2">
+                <div data-id='news_"""+o_idD+"""' data-view="List3" data-title="Viral Stories" ></div>
+            </li>
+            
             <li data-row="2" data-col="1" data-sizex="2" data-sizey="1">
-       <div data-id='twitter_mentions1_"""+o_idD+"""' data-view="Comments" data-title="Tweets" style="background-color: #71388a"></div>
-    </li>
+                <div data-id='twitter_mentions1_"""+o_idD+"""' data-view="Comments" data-title="Tweets" style="background-color: #71388a"></div>
+            </li>
 	
-	<li data-row="2" data-col="1" data-sizex="2" data-sizey="1">
-       <div data-id='twitter_mentions2_"""+o_idD+"""' data-view="Comments" data-title="Tweets" style="background-color: #71388a"></div>
-    </li>
+	          <li data-row="2" data-col="1" data-sizex="2" data-sizey="1">
+                <div data-id='twitter_mentions2_"""+o_idD+"""' data-view="Comments" data-title="Tweets" style="background-color: #71388a"></div>
+            </li>
 	
-	<li data-row="2" data-col="1" data-sizex="2" data-sizey="1">
-       <div data-id='twitter_mentions3_"""+o_idD+"""' data-view="Comments" data-title="Tweets" style="background-color: #71388a"></div>
-    </li>
+	          <li data-row="2" data-col="1" data-sizex="2" data-sizey="1">
+                <div data-id='twitter_mentions3_"""+o_idD+"""' data-view="Comments" data-title="Tweets" style="background-color: #71388a"></div>
+            </li>
 	
-	<li data-row="2" data-col="1" data-sizex="2" data-sizey="1">
-       <div data-id='twitter_mentions4_"""+o_idD+"""' data-view="Comments" data-title="Tweets" style="background-color: #71388a"></div>
-    </li>
-        <li data-row="1" data-col="1" data-sizex="4" data-sizey="1">
-		<div data-id='reddit_"""+o_idD+"""' data-view="Reddit" ></div>
-	    </li>
+	          <li data-row="2" data-col="1" data-sizex="2" data-sizey="1">
+                <div data-id='twitter_mentions4_"""+o_idD+"""' data-view="Comments" data-title="Tweets" style="background-color: #71388a"></div>
+            </li>
+            
+            <li data-row="1" data-col="1" data-sizex="4" data-sizey="1">
+		            <div data-id='reddit_"""+o_idD+"""' data-view="Reddit" ></div>
+	          </li>
+            
             <li data-row="1" data-col="1" data-sizex="2" data-sizey="1" data-sizey="1">
-        <div data-id='youtube_player1_"""+o_idD+"""' data-view="Iframe" style="background-color: #c0392b"></div>
-    </li>
+                <div data-id='youtube_player1_"""+o_idD+"""' data-view="Iframe" style="background-color: #c0392b"></div>
+            </li>
 	
-	<li data-row="1" data-col="1" data-sizex="2" data-sizey="1" data-sizey="1">
-        <div data-id='youtube_player2_"""+o_idD+"""' data-view="Iframe" style="background-color: #c0392b"></div>
-    </li>
+	          <li data-row="1" data-col="1" data-sizex="2" data-sizey="1" data-sizey="1">
+                <div data-id='youtube_player2_"""+o_idD+"""' data-view="Iframe" style="background-color: #c0392b"></div>
+            </li>
 	
-	<li data-row="1" data-col="1" data-sizex="2" data-sizey="1" data-sizey="1">
-        <div data-id='youtube_player3_"""+o_idD+"""' data-view="Iframe" style="background-color: #c0392b"></div>
-    </li>
+	          <li data-row="1" data-col="1" data-sizex="2" data-sizey="1" data-sizey="1">
+                <div data-id='youtube_player3_"""+o_idD+"""' data-view="Iframe" style="background-color: #c0392b"></div>
+            </li>
 	
-	<li data-row="1" data-col="1" data-sizex="2" data-sizey="1" data-sizey="1">
-        <div data-id='youtube_player4_"""+o_idD+"""' data-view="Iframe" style="background-color: #c0392b"></div>
-    </li>
-    </ul>
+	          <li data-row="1" data-col="1" data-sizex="2" data-sizey="1" data-sizey="1">
+                <div data-id='youtube_player4_"""+o_idD+"""' data-view="Iframe" style="background-color: #c0392b"></div>
+            </li>
+      </ul>
    </div> """
 
     
@@ -105,20 +112,20 @@ require 'json'
 require 'twitter'
 require 'openssl'
 
-		
-def getTopPostsPerSubreddit()  
+SCHEDULER.every '1m', :first_in => 0 do |job|
 
-    uri = URI('http://0.0.0.0:8080/api/?user_id="""+o_idJ+"""')
-    response = Net::HTTP.get(uri)
+  uri = URI('http://0.0.0.0:8080/api/?user_id="""+o_idJ+"""')
+  response = Net::HTTP.get(uri)
 
-    data = JSON.parse(response)
+  data = JSON.parse(response)
 
-    subreddit =Array.new
+  subreddit =Array.new
     
-    subreddit =  data[0]['reddit']
-    response = []
-    posts = [];
-   if subreddit.length>0
+  subreddit =  data[0]['reddit']
+  puts subreddit
+  response = []
+  posts = [];
+  if subreddit.length>0
 
         for it in subreddit
             url = URI("https://www.reddit.com"+it+"/.json")
@@ -137,18 +144,11 @@ def getTopPostsPerSubreddit()
                     comments: item_['data']['num_comments']
                 })
             end
+            puts items
             posts.push({ label: 'Current top posts in "' + it + '"', items: items })
+            send_event('reddit_"""+o_idJ+"""', { :posts => posts })
         end
-   end  
-    return posts
-end
-
-
-
-SCHEDULER.every '20s', :first_in => 0 do |job|
-  posts = getTopPostsPerSubreddit
-    
-  send_event('reddit_"""+o_idJ+"""', { :posts => posts })
+    end
 end		
 
 #--------------------------TWITTER---------------------------------------------------------------------------
@@ -197,49 +197,41 @@ end
 #-------------------------------------------------------------------------------------------------------
 
 
-SCHEDULER.every '20s', :first_in => 0 do |job|
-  min = 0
-  page_size= 5
-    uri = URI('http://0.0.0.0:8080/api/?user_id="""+o_idJ+"""')
+
+SCHEDULER.every '40s', :first_in => 0 do |job|
+  	
+  	min = 0
+  	page_size= 5
+    uri = URI('http://0.0.0.0:8080/whooshSearch/?user_id="""+o_idJ+"""')
     response = Net::HTTP.get(uri)
-    data = JSON.parse(response)    
-
-    tags =Array.new
-    tags = data[0]['news']
-    
-    if tags.length>0
+    data_n = JSON.parse(response)    
+	
+	if data_n.length>0
+	    newswhip_article = Array.new
+		for d in data_n
+		
+			newswhip_article.push({
+                   	label: d['title'],
+                	value: d['publisher'],
+                    value2: d['count']})
         
-        for t in tags do
-            uri = URI('https://api.newswhip.com/v1/search?q='+t+'&key=AHwaqz7hApx9D')
-            response = Net::HTTP.get(uri)
-            data = JSON.parse(response)
-            newswhip_article = Array.new
-
-            data['articles'].each do |arr|
-                newswhip_article.push({
-                    label: arr['headline'],
-                    value: arr['source']['publisher'],
-                    value2: arr['fb_data']['like_count'] + arr['tw_data']['tw_count']})
-                end
-        end
+		end
 
         max = newswhip_article.length
-        while max > (min+page_size)
+       	
+       	while max > (min+page_size)
             send_event('news_"""+o_idJ+"""', { items: newswhip_article.slice(min, page_size)})
-            sleep(10)
+           	sleep(20)
             min = min + page_size
-        end
-        send_event('news_"""+o_idJ+"""', { items: newswhip_article.slice(min..max)})
+       end
+            send_event('news_"""+o_idJ+"""', { items: newswhip_article.slice(min..max)})
     end
-     
 end
-
-
 ##----------------------------YOUTUBE-------------------------------------------------------------------------
 ##-------------------------------------------------------------------------------------------------------
-#
-#
-SCHEDULER.every '2m', :first_in => 0 do |job|
+
+
+SCHEDULER.every '5m', :first_in => 0 do |job|
     
 uri = URI('http://0.0.0.0:8080/api/?user_id="""+o_idJ+"""')
 response = Net::HTTP.get(uri)
@@ -281,23 +273,28 @@ end
  end
     
 if channel.length>0
-channel_arr = Array.new
-for ch_ in channel
-    channel_arr.push(video_player(ch_))
- end
+    channel_arr = Array.new
+
+    for ch_ in channel
+      channel_arr.push(video_player(ch_))
+    end
  
-min=0
-len=1  
-arr = []
-    k=0
-    for i in channel_arr[0..5]
-        send_event('youtube_player'+(k+1).to_s+'_"""+o_idJ+"""', { :items => i.slice(min, len) })
-        k+=1
-        sleep(60)
-        min=min+1  
-    end    
+    min=0
+    len=1
+    k=1
+    ch=channel_arr.length
+     
+    for i in 0..4
+       for k in ch.times
+         send_event('youtube_player'+(k+1).to_s+'_"""+o_idJ+"""', { :items => channel_arr[k].slice(min, len) })
+         k=k+1
+       end
+       sleep(60)
+       min=min+1
+    end
     
 end
+
 end
     
 
@@ -325,7 +322,6 @@ def Reddit(usr_r, text_r):
     
 def Twitter(usr_t, text_t):
     ur=urllib.urlopen('https://twitter.com/'+text_t)
-    print ur.getcode()
     if ur.getcode() == 200:
         val=db.prefrences.find({'user_id': usr_t})
         for v in val:
@@ -372,7 +368,6 @@ def News(usr_n, text_n):
 def Api(id_):
 
     cursor = db.prefrences.find({'user_id': id_}) 
-#    cursor = db.prefrences.find() 
     json_c = []
     for d in cursor:
         d['_id'] = str(d['_id'])
@@ -434,8 +429,25 @@ def Youtube_channelId_search(data_):
 #    subprocess.call("dashing stop", shell=True)"""
 #    subprocess.call("bash /Users/Kumar/dashing.sh", shell=True)
     
+def WhooshSearch(usr_w):
+    val=db.prefrences.find_one({'user_id': usr_w})
+    tags_=val['news']
+    ix = open_dir('dashing.whoosh')
+    ret_ar =[]
+    with ix.searcher() as searcher:
+        for t in tags_:
+            query = MultifieldParser(["title","publisher","excerpt","keywords"], ix.schema).parse(unicode(t))
+#            query = QueryParser("title", ix.schema).parse(unicode(t))
+            results = searcher.search(query,limit=None)
+            for result in results:
+                obj = {"title":"","publisher":"","count":0}
+                obj['title']= result['title']
+                obj['count']= result['count']
+                obj['publisher']= result['publisher']
+                ret_ar.append(obj)
+    return ret_ar
 
-
+        
 def UserApi():
 
     cursor = db.users.find() 
@@ -456,6 +468,19 @@ def UserRemove(usr_name):
     val=db.users.find_one({'username': usr_name})
     usrid= val['_id']
     db.users.remove({'_id': usrid})
+    
+    
+
+#    
+#    
+#    subprocess.call("cd /Users/Yu/Documents/trash/")
+#    subprocess.call("rm trycopy.py")
+#    cd
+#    cd /Users/Yu/Documents/gzl/
+#    rm trycopy6.py
+    
+    
+    
     
     
     

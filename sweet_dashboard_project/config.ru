@@ -1,4 +1,6 @@
 require 'dashing'
+Sinatra::Application.settings.history.clear
+
 
 configure do
   set :auth_token, 'YOUR_AUTH_TOKEN'

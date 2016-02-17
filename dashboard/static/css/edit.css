@@ -59,3 +59,8 @@
     font-family: monospace;
     display: none;
 }
+
+.reddit_del img,.twitter_del img, .youtube_del img, .news_del img{
+    margin-right: 10px;
+    margin-top: -3px;
+}

@@ -26,13 +26,15 @@ $def with (user)
         
         <a href="/edit" oncontextmenu="return false" style="display: inline-block; float: right; margin: 30px;" >SET PREFRENCES</a>
         
-        <a href="/createUser" oncontextmenu="return false" style="display: inline-block; float: right; margin: 30px;">CREATE USER</a>
+        <a href="/createUser" oncontextmenu="return false" id="createuser" style="display: none; float: right; margin: 30px;">CREATE USER</a>
         
         <iframe src="http://0.0.0.0:3030/$user['user_id']" width="1260" height="600"></iframe>
         
         <script>
             var curPage="index";
-            console.log("$user['user_id']");
+            console.log("$user");
+            var uData = "$user['perm']";
+//            console.log("$user['user_id']");
             window.localStorage.setItem("user_id","$user['user_id']");
         </script>
         <script src="static/js/jquery-1.11.1.min.js"></script>

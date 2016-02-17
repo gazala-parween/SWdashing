@@ -8,6 +8,10 @@ $(document).ready(function () {
     else if(curPage==="createUser"){
         loaduserdetails();
     }
+    else if(curPage==="index"){
+        console.log("index page")
+        loadindexpage();
+    }
     
     function loadcontent(){
             $.ajax({
@@ -35,6 +39,17 @@ $(document).ready(function () {
         });
     };
     
+    function loadindexpage(){
+        console.log(uData,$('#createuser').css("display"));
+        
+        if (uData==='admin'){
+            $('#createuser').css({'display':'inline-block'});
+        }
+        console.log(uData)
+        
+    }
+    
+    
     function showuser(u_data){
     
     var user_str = "";
@@ -49,17 +64,27 @@ $(document).ready(function () {
         
         
           $(".user_del").click(function(){
+                      var r = confirm("Delete User "+$(this).text()+"?");
+                        if (r === true) {
+                           deleteUser($(this).text())
+                        } else {
+                           txt = "Good!";
+                        }
         console.log($(this).text());
-                $.ajax({
+            
+            });
+    }
+    
+    function deleteUser(uname){        
+        $.ajax({
             url: 'http://0.0.0.0:8080/userRemove/',
-            data:{userRem:$(this).text()},
+            data:{userRem:uname},
             error: function (e) {console.log(e.error);},
             success: function (data) {
                 loaduserdetails();
             },
             type: 'POST'
                     }); 
-            });
     }
     
     function showcontent(j_data){
@@ -71,14 +96,14 @@ $(document).ready(function () {
         var reddit_str = "";
         for(i=0;i<data['reddit'].length;i++)
         {
-            reddit_str +='<p class="reddit_del">'+data['reddit'][i]+'<img src="../images/Deletion_icon.png" width="15" height="15"></p>' 
+            reddit_str +='<p class="reddit_del"><img src="static/images/Deletion_icon.png" width="15" height="15">'+data['reddit'][i]+'</p>' 
         }
         $("#reddit_container").html(reddit_str);
         
         var twitter_str = "";
         for(i=0;i<data['twitter'].length;i++)
         {
-            twitter_str +='<p class="twitter_del">'+data['twitter'][i]+'</p>' 
+            twitter_str +='<p class="twitter_del"><img src="static/images/Deletion_icon.png" width="15" height="15">'+data['twitter'][i]+'</p>' 
         }
         $("#twitter_container").html(twitter_str);
         
@@ -86,14 +111,14 @@ $(document).ready(function () {
 
         for(i=0;i<data['youtube'].length;i++)
         {
-            youtube_str +='<p class="youtube_del">'+data['youtube'][i]+'</p>' 
+            youtube_str +='<p class="youtube_del"><img src="static/images/Deletion_icon.png" width="15" height="15">'+data['youtube'][i]+'</p>' 
         }
         $("#youtube_container").html(youtube_str);
         
         var news_str = "";
         for(i=0;i<data['news'].length;i++)
         {
-            news_str +='<p class="news_del">'+data['news'][i]+'</p>' 
+            news_str +='<p class="news_del"><img src="static/images/Deletion_icon.png" width="15" height="15">'+data['news'][i]+'</p>' 
         }
         $("#news_container").html(news_str);
         
@@ -165,9 +190,15 @@ $(document).ready(function () {
         });
         
     });
-
+    
+     $("#redditText").on("click",function(){
+        $("#redditError").hide();
+         $("#redditError").text("Invalid Subreddit!");
+     })
+     
     $("#redditBtn").on("click",function(){
-    $.ajax({
+        if ($( "#redditText" ).val().trim()!==""){
+         $.ajax({
             url: 'http://0.0.0.0:8080/reddit/',
             data:{redditText:$( "#redditText" ).val()},
             dataType: 'html',
@@ -176,7 +207,7 @@ $(document).ready(function () {
                 var someData = JSON.parse(data);                
                 console.log(data,someData);
                 if (someData.status){
-                    $("#reddit_container").append('<p class="reddit_del">'+$( "#redditText" ).val()+'</p>');
+                    $("#reddit_container").append('<p class="reddit_del"><img src="static/images/Deletion_icon.png" width="15" height="15">'+$( "#redditText" ).val()+'</p>');
                     $( "#redditText" ).val('');
                 }
                 else{
@@ -189,11 +220,24 @@ $(document).ready(function () {
                 
             },            
             type: 'POST'
-        });
+        });   
+        }    
+        else{
+            $("#redditError").text("Field Is Empty");
+            $("#redditError").show();
+        }
         
     })
+
+    $("#twitterText").on("click",function(){
+        $("#twitterError").hide();
+         $("#twitterError").text("Invalid Handle!");
+     })
+     
     
-    $("#twitterBtn").click(function(){ console.log("twitter");
+    $("#twitterBtn").click(function(){ 
+        console.log("twitter");
+        if ($( "#twitterText" ).val().trim()!==""){
         $.ajax({
             url: 'http://0.0.0.0:8080/twitter/',
             data:{twitterText:$( "#twitterText" ).val()},
@@ -203,7 +247,7 @@ $(document).ready(function () {
                 var someData = JSON.parse(data);                
                 console.log(data,someData);
                 if (someData.status){
-                    $("#twitter_container").append('<p class="reddit_del">'+$( "#twitterText" ).val()+'</p>');
+                    $("#twitter_container").append('<p class="reddit_del"><img src="static/images/Deletion_icon.png" width="15" height="15">'+$( "#twitterText" ).val()+'</p>');
                     $( "#twitterText" ).val('');
                 }
                 else{
@@ -217,12 +261,23 @@ $(document).ready(function () {
             type: 'POST'
     
         });
+        }
+        else {
+            
+         $("#twitterError").text("Field Is Empty!");
+         $("#twitterError").show();
+        }
         
     })
     
-    
+    $("#youtubeText").on("click",function(){
+        $("#youtubeError").hide();
+         $("#youtubeError").text("Invalid Channel!");
+     })
 
-    $("#youtubeBtn").click(function(){ console.log("youtube");
+    $("#youtubeBtn").click(function(){ 
+        console.log("youtube");
+        if ($( "#youtubeText" ).val().trim()!==""){
         $.ajax({
             url: 'http://0.0.0.0:8080/youtube/',
             data:{youtubeText:$( "#youtubeText" ).val()},
@@ -232,21 +287,37 @@ $(document).ready(function () {
                 var someData = JSON.parse(data);                
                 console.log(data,someData);
                 if (someData.status){
-                    $("#youtube_container").append('<p class="reddit_del">'+$( "#youtubeText" ).val()+'</p>');
+                    $("#youtube_container").append('<p class="reddit_del"><img src="static/images/Deletion_icon.png" width="15" height="15">'+$( "#youtubeText" ).val()+'</p>');
                     $( "#youtubeText" ).val('');
                 }
-                    
+               else {
+
+                 $("#youtubeError").show();
+               }     
             },
             error: function (e) {
+                $("#youtubeError").show();
                 console.log(e);
                 
             }, 
             type: 'POST'
         });
-        
+        }
+        else {
+            
+         $("#youtubeError").text("Field Is Empty!");
+         $("#youtubeError").show();
+        }
     })
     
-    $("#newsBtn").click (function(){ console.log("news");
+    $("#newsText").on("click",function(){
+        $("#newsError").hide();
+         // $("#newsError").text("Invalid Channel!");
+     })
+    
+    $("#newsBtn").click (function(){ 
+        console.log("news");
+        if ($( "#newsText" ).val().trim()!==""){
         $.ajax({
             url: 'http://0.0.0.0:8080/news/',
             data:{newsText:$( "#newsText" ).val()},
@@ -256,14 +327,21 @@ $(document).ready(function () {
                 var someData = JSON.parse(data);                
                 console.log(data,someData);
                 if (someData.status){
-                    $("#news_container").append('<p class="reddit_del">'+$( "#newsText" ).val()+'</p>');
+                    $("#news_container").append('<p class="reddit_del"><img src="static/images/Deletion_icon.png" width="15" height="15">'+$( "#newsText" ).val()+'</p>');
                     $( "#newsText" ).val('');
                 }
-                  
+               else {
+                 $("#newsError").show();
+               }   
             },
             type: 'POST'
         });
-        
+        }
+        else {
+               
+         $("#newsError").text("Field Is Empty!");
+         $("#newsError").show();
+        }
     })
     
     $("#searchBtn").click (function(){

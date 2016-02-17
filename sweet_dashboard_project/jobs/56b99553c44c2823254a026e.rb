@@ -4,20 +4,20 @@ require 'json'
 require 'twitter'
 require 'openssl'
 
-		
-def getTopPostsPerSubreddit()  
+SCHEDULER.every '1m', :first_in => 0 do |job|
 
-    uri = URI('http://0.0.0.0:8080/api/?user_id=56b99553c44c2823254a026e')
-    response = Net::HTTP.get(uri)
+  uri = URI('http://0.0.0.0:8080/api/?user_id=56b99553c44c2823254a026e')
+  response = Net::HTTP.get(uri)
 
-    data = JSON.parse(response)
+  data = JSON.parse(response)
 
-    subreddit =Array.new
+  subreddit =Array.new
     
-    subreddit =  data[0]['reddit']
-    response = []
-    posts = [];
-   if subreddit.length>0
+  subreddit =  data[0]['reddit']
+  # puts subreddit
+  response = []
+  posts = [];
+  if subreddit.length>0
 
         for it in subreddit
             url = URI("https://www.reddit.com"+it+"/.json")
@@ -36,18 +36,11 @@ def getTopPostsPerSubreddit()
                     comments: item_['data']['num_comments']
                 })
             end
+            # puts items
             posts.push({ label: 'Current top posts in "' + it + '"', items: items })
+            send_event('reddit_56b99553c44c2823254a026e', { :posts => posts })
         end
-   end  
-    return posts
-end
-
-
-
-SCHEDULER.every '20s', :first_in => 0 do |job|
-  posts = getTopPostsPerSubreddit
-    
-  send_event('reddit_56b99553c44c2823254a026e', { :posts => posts })
+    end
 end		
 
 #--------------------------TWITTER---------------------------------------------------------------------------
@@ -67,7 +60,7 @@ SCHEDULER.every '20s', :first_in => 0 do |job|
     uri = URI('http://0.0.0.0:8080/api/?user_id=56b99553c44c2823254a026e')
     response = Net::HTTP.get(uri)
     data = JSON.parse(response)    
-
+#if data.length>0
     handles =Array.new
 
     handles=data[0]['twitter']
@@ -89,56 +82,48 @@ SCHEDULER.every '20s', :first_in => 0 do |job|
 	  send_event('twitter_mentions3_56b99553c44c2823254a026e', comments: twee_arr[2])
       send_event('twitter_mentions4_56b99553c44c2823254a026e', comments: twee_arr[3])
     end
+#end
 end
-
 
 #-----------------------------NEWSWHIP------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------
 
 
-SCHEDULER.every '20s', :first_in => 0 do |job|
-  min = 0
-  page_size= 5
-    uri = URI('http://0.0.0.0:8080/api/?user_id=56b99553c44c2823254a026e')
+
+SCHEDULER.every '40s', :first_in => 0 do |job|
+  	
+  	min = 0
+  	page_size= 5
+    uri = URI('http://0.0.0.0:8080/whooshSearch/?user_id=56b99553c44c2823254a026e')
     response = Net::HTTP.get(uri)
-    data = JSON.parse(response)    
-
-    tags =Array.new
-    tags = data[0]['news']
-    
-    if tags.length>0
+    data_n = JSON.parse(response)    
+	
+	if data_n.length>0
+	    newswhip_article = Array.new
+		for d in data_n
+		
+			newswhip_article.push({
+                   	label: d['title'],
+                	value: d['publisher'],
+                    value2: d['count']})
         
-        for t in tags do
-            uri = URI('https://api.newswhip.com/v1/search?q='+t+'&key=AHwaqz7hApx9D')
-            response = Net::HTTP.get(uri)
-            data = JSON.parse(response)
-            newswhip_article = Array.new
-
-            data['articles'].each do |arr|
-                newswhip_article.push({
-                    label: arr['headline'],
-                    value: arr['source']['publisher'],
-                    value2: arr['fb_data']['like_count'] + arr['tw_data']['tw_count']})
-                end
-        end
+		end
 
         max = newswhip_article.length
-        while max > (min+page_size)
+       	
+       	while max > (min+page_size)
             send_event('news_56b99553c44c2823254a026e', { items: newswhip_article.slice(min, page_size)})
-            sleep(10)
+           	sleep(20)
             min = min + page_size
-        end
-        send_event('news_56b99553c44c2823254a026e', { items: newswhip_article.slice(min..max)})
+       end
+            send_event('news_56b99553c44c2823254a026e', { items: newswhip_article.slice(min..max)})
     end
-     
 end
-
-
 ##----------------------------YOUTUBE-------------------------------------------------------------------------
 ##-------------------------------------------------------------------------------------------------------
-#
-#
-SCHEDULER.every '2m', :first_in => 0 do |job|
+
+
+SCHEDULER.every '5m', :first_in => 0 do |job|
     
 uri = URI('http://0.0.0.0:8080/api/?user_id=56b99553c44c2823254a026e')
 response = Net::HTTP.get(uri)
@@ -180,23 +165,28 @@ end
  end
     
 if channel.length>0
-channel_arr = Array.new
-for ch_ in channel
-    channel_arr.push(video_player(ch_))
- end
+    channel_arr = Array.new
+
+    for ch_ in channel
+      channel_arr.push(video_player(ch_))
+    end
  
-min=0
-len=1  
-arr = []
-    k=0
-    for i in channel_arr[0..5]
-        send_event('youtube_player'+(k+1).to_s+'_56b99553c44c2823254a026e', { :items => i.slice(min, len) })
-        k+=1
-        sleep(60)
-        min=min+1  
-    end    
+    min=0
+    len=1
+    k=1
+    ch=channel_arr.length
+     
+    for i in 0..4
+       for k in ch.times
+         send_event('youtube_player'+(k+1).to_s+'_56b99553c44c2823254a026e', { :items => channel_arr[k].slice(min, len) })
+         k=k+1
+       end
+       sleep(60)
+       min=min+1
+    end
     
 end
+
 end
     
 
